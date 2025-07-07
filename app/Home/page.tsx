@@ -1,145 +1,76 @@
-"use client";
+import React from 'react';
+import { FaUser, FaLock } from 'react-icons/fa';
+import { FcGoogle } from 'react-icons/fc';
+import { FaFacebookF, FaGithub, FaLinkedinIn } from 'react-icons/fa';
 
-import {
-  ArrowRight,
-  CreditCard,
-  Share2,
-  Shield,
-  CheckCircle,
-} from "lucide-react";
-import Link from "next/link";
-
-const benefits = [
-  "Never lose your business cards again",
-  "Update your information anytime",
-  "Eco-friendly paperless solution",
-  "Professional and memorable impression",
-  "Works on any device, anywhere",
-  "Cost-effective for businesses",
-];
-
-const features = [
-  {
-    icon: <CreditCard className="w-8 h-8 text-white" />,
-    title: "Easy Creation",
-    desc: "Create professional digital ID cards in minutes with our intuitive, step-by-step interface.",
-    color: "from-blue-500 to-blue-600",
-  },
-  {
-    icon: <Share2 className="w-8 h-8 text-white" />,
-    title: "Instant Sharing",
-    desc: "Share your digital card via QR code, link, or direct message instantly with anyone, anywhere.",
-    color: "from-purple-500 to-purple-600",
-  },
-  {
-    icon: <Shield className="w-8 h-8 text-white" />,
-    title: "Secure & Reliable",
-    desc: "Your data is protected with enterprise-grade security and complete privacy controls.",
-    color: "from-green-500 to-green-600",
-  },
-];
-
-const Home = () => {
+const App = () => { // Renamed from Login to App for React default export
   return (
-    <div className="bg-gradient-to-br from-blue-50 via-white to-purple-50 min-h-screen">
-      {/* Background Effects */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-24 left-16 w-72 h-72 bg-blue-200 rounded-full mix-blend-multiply blur-2xl opacity-20 animate-pulse" />
-        <div className="absolute top-48 right-16 w-72 h-72 bg-purple-200 rounded-full mix-blend-multiply blur-2xl opacity-20 animate-pulse delay-1000" />
+    <div className="flex items-center justify-center min-h-screen bg-blue-100 px-4 font-inter"> {/* Added font-inter */}
+      <div className="bg-white w-full max-w-sm rounded-3xl shadow-lg overflow-hidden">
+        <div className="bg-blue-400 text-white text-center p-6 rounded-b-3xl">
+          <h2 className="text-xl font-bold">Hello, Welcome!</h2>
+          <p className="text-sm">Don't have an account?</p>
+          <button className="mt-2 px-4 py-1 bg-white text-blue-500 rounded-full font-medium hover:bg-blue-100 transition focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-75">
+            Register
+          </button>
+        </div>
+
+        {/* Login Form */}
+        <div className="p-6">
+          <h3 className="text-xl font-semibold text-center mb-4 text-gray-500">Login</h3>
+
+          <div className="mb-4 relative text-gray-500">
+            {/* Added label for accessibility */}
+            <label htmlFor="username" className="sr-only">Username</label>
+            <input
+              id="username" // Added id to link with label
+              type="text"
+              placeholder="Username"
+              className="w-full px-10 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-75"
+            />
+            <FaUser className="absolute left-3 top-3 text-gray-400" aria-hidden="true" /> {/* Added aria-hidden */}
+          </div>
+
+          <div className="mb-2 relative text-gray-500">
+            {/* Added label for accessibility */}
+            <label htmlFor="password" className="sr-only">Password</label>
+            <input
+              id="password" // Added id to link with label
+              type="password"
+              placeholder="Password"
+              className="w-full px-10 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-75"
+            />
+            <FaLock className="absolute left-3 top-3 text-gray-400" aria-hidden="true" /> {/* Added aria-hidden */}
+          </div>
+
+          <button className="text-center text-sm mb-4 text-blue-500 hover:underline cursor-pointer w-full" type="button"> {/* Changed to button for semantic correctness and added type */}
+            Forgot password?
+          </button>
+
+          <button className="w-full bg-blue-500 text-white py-3 rounded-full hover:bg-blue-600 transition font-medium focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-75">
+            Login
+          </button>
+
+          {/* Social Logins */}
+          <div className="text-center mt-4 text-sm text-gray-500">or login with social platforms</div>
+          <div className="flex justify-center gap-4 mt-2">
+            <button className="p-2 bg-gray-100 rounded-full hover:shadow focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-75" aria-label="Login with Google"> {/* Added aria-label */}
+              <FcGoogle size={20} aria-hidden="true" /> {/* Added aria-hidden */}
+            </button>
+            <button className="p-2 bg-gray-100 rounded-full hover:shadow focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-75" aria-label="Login with Facebook"> {/* Added aria-label */}
+              <FaFacebookF size={20} className="text-blue-600" aria-hidden="true" /> {/* Added aria-hidden */}
+            </button>
+            <button className="p-2 bg-gray-100 rounded-full hover:shadow focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-75" aria-label="Login with GitHub"> {/* Added aria-label */}
+              <FaGithub size={20}  className='text-blue-600' aria-hidden="true" /> {/* Added aria-hidden */}
+            </button>
+            <button className="p-2 bg-gray-100 rounded-full hover:shadow focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-75" aria-label="Login with LinkedIn"> {/* Added aria-label */}
+              <FaLinkedinIn size={20} className="text-blue-700" aria-hidden="true" /> {/* Added aria-hidden */}
+            </button>
+          </div>
+        </div>
       </div>
-
-      <main className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Hero Section */}
-        <section className="text-center py-24">
-          <h1 className="text-5xl sm:text-7xl font-bold text-gray-900 mb-6 leading-tight">
-            Digital ID Cards for the
-            <span className="block bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              Modern World
-            </span>
-          </h1>
-          <p className="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto mb-10 leading-relaxed">
-            Create, manage, and share your professional identity cards.
-            Eco-friendly, secure, and always accessible.
-          </p>
-
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Link
-              href="/create-card"
-              className="group bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-full text-lg font-semibold hover:shadow-lg hover:scale-105 transition"
-            >
-              Create Your Card Now
-              <ArrowRight className="inline-block ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </Link>
-            <Link
-              href="/login"
-              className="border border-gray-300 text-gray-700 px-8 py-4 rounded-full text-lg font-semibold hover:border-blue-500 hover:text-blue-600 hover:bg-blue-50 transition"
-            >
-              Sign In
-            </Link>
-          </div>
-        </section>
-
-        {/* Features Section */}
-        <section className="py-20">
-          <div className="text-center mb-14">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
-              Why Choose Digital ID Cards?
-            </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Transform the way you network and manage your identity
-              professionally
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {features.map(({ icon, title, desc, color }, index) => (
-              <div
-                key={index}
-                className="group bg-white/90 backdrop-blur-sm p-8 rounded-3xl shadow-md hover:shadow-xl border border-gray-100 transition-all duration-300 hover:-translate-y-2"
-              >
-                <div
-                  className={`bg-gradient-to-br ${color} w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-6 group-hover:scale-105 transition-transform`}
-                >
-                  {icon}
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3 text-center">
-                  {title}
-                </h3>
-                <p className="text-gray-600 text-center text-sm leading-relaxed">
-                  {desc}
-                </p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Benefits Section */}
-        <section className="py-24 text-center">
-          <h2 className="text-4xl font-bold text-gray-900 mb-10">
-            Perfect for Modern Professionals
-          </h2>
-
-          <div className="grid sm:grid-cols-2 gap-5 max-w-3xl mx-auto text-left">
-            {benefits.map((item, i) => (
-              <div key={i} className="flex items-start gap-3">
-                <CheckCircle className="w-6 h-6 text-green-500 mt-1" />
-                <p className="text-gray-700 text-base">{item}</p>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-12">
-            <Link
-              href="/create-card"
-              className="inline-block bg-gradient-to-r from-blue-600 to-purple-600 text-white px-10 py-4 rounded-full text-lg font-semibold hover:shadow-xl transform hover:scale-105 transition"
-            >
-              Get Started Today
-            </Link>
-          </div>
-        </section>
-      </main>
     </div>
   );
 };
 
-export default Home;
+export default App;
