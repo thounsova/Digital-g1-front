@@ -1,6 +1,6 @@
 "use client";
 
-import Homepage from "./Home/page";
+import Homepage from "./auth/Login/page";
 const Home = () => {
   return <Homepage />;
 };
