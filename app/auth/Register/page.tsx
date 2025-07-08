@@ -5,25 +5,29 @@ import { FaFacebookF, FaGithub, FaLinkedinIn } from "react-icons/fa";
 
 const Register = () => {
   return (
-    <div className="flex items-center justify-center min-h-screen bg-blue-100 px-4 font-inter">
-      <div className="bg-white w-full max-w-sm rounded-3xl shadow-lg overflow-hidden">
-        {/* Left Panel */}
-        <div className="bg-blue-400 text-white text-center p-6 rounded-b-3xl">
-          <h2 className="text-xl font-bold">Welcome Back!</h2>
-          <p className="text-sm">Already have an account?</p>
-          <button className="mt-2 px-4 py-1 bg-white text-blue-500 rounded-full font-medium hover:bg-blue-100 transition focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-75">
-            Login
+    <div className="flex items-center  justify-center min-h-screen bg-gray-950  font-sans">
+      <div className=" w-full max-w-md rounded-lg shadow-lg overflow-hidden">
+        {/* Header */}
+        <div className="bg-amber-400 text-white text-center mt-1 p-6 rounded-l-full">
+          <h2 className="text-xl font-bold">Create Your Account</h2>
+          <p className="text-sm"> Already have an account?{" "}</p>
+          <a href="/auth/Login">
+          
+                <button className="mt-2 px-6 py-2 bg-yellow-400 border border-gray-200 text-gray-900 font-medium  hover:bg-blue-100 hover:text-blue-600 transition focus:outline-none focus:ring-2 focus:ring-blue-300">
+              Log in
           </button>
+          </a>
         </div>
+
 
         {/* Registration Form */}
         <div className="p-6">
-          <h3 className="text-xl font-semibold text-center mb-4 text-gray-500">
+          <h3 className="text-xl font-semibold text-center mb-6 text-gray-200">
             Register
           </h3>
 
-          {/* Username */}
-          <div className="mb-4 relative text-gray-500">
+          {/* Username */} 
+          <div className="mb-4 text-amber-50 relative">
             <label htmlFor="username" className="sr-only">
               Username
             </label>
@@ -31,16 +35,13 @@ const Register = () => {
               id="username"
               type="text"
               placeholder="Username"
-              className="w-full px-10 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-75"
+              className="w-full px-10 py-3 text-amber-50 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
-            <FaUser
-              className="absolute left-3 top-3 text-gray-400"
-              aria-hidden="true"
-            />
+            <FaUser className="absolute left-3 top-3.5 text-gray-400" aria-hidden="true" />
           </div>
 
           {/* Email */}
-          <div className="mb-4 relative text-gray-500">
+          <div className="mb-4 relative">
             <label htmlFor="email" className="sr-only">
               Email
             </label>
@@ -48,16 +49,13 @@ const Register = () => {
               id="email"
               type="email"
               placeholder="Email"
-              className="w-full px-10 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-75"
+              className="w-full px-10 py-3 text-amber-50 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
-            <FaEnvelope
-              className="absolute left-3 top-3 text-gray-400"
-              aria-hidden="true"
-            />
+            <FaEnvelope className="absolute left-3 top-3.5 text-gray-400" aria-hidden="true" />
           </div>
 
           {/* Password */}
-          <div className="mb-4 relative text-gray-500">
+          <div className="mb-4 relative">
             <label htmlFor="password" className="sr-only">
               Password
             </label>
@@ -65,16 +63,13 @@ const Register = () => {
               id="password"
               type="password"
               placeholder="Password"
-              className="w-full px-10 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-75"
+              className="w-full px-10 py-3 border text-amber-50 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
-            <FaLock
-              className="absolute left-3 top-3 text-gray-400"
-              aria-hidden="true"
-            />
+            <FaLock className="absolute left-3 top-3.5 text-gray-400" aria-hidden="true" />
           </div>
 
           {/* Confirm Password */}
-          <div className="mb-4 relative text-gray-500">
+          <div className="mb-4 relative">
             <label htmlFor="confirm-password" className="sr-only">
               Confirm Password
             </label>
@@ -82,59 +77,44 @@ const Register = () => {
               id="confirm-password"
               type="password"
               placeholder="Confirm Password"
-              className="w-full px-10 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-75"
+              className="w-full px-10 py-3 text-amber-50 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
-            <FaLock
-              className="absolute left-3 top-3 text-gray-400"
-              aria-hidden="true"
-            />
+            <FaLock className="absolute left-3 top-3.5 text-gray-400" aria-hidden="true" />
           </div>
 
           {/* Register Button */}
-          <button className="w-full bg-blue-500 text-white py-3 rounded-full hover:bg-blue-600 transition font-medium focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-75">
+          <button className="w-full bg-amber-400 text-white py-3 rounded-md hover:bg-blue-700 transition font-medium focus:outline-none focus:ring-2 focus:ring-blue-400">
             Register
           </button>
 
           {/* Social Logins */}
-          <div className="text-center mt-4 text-sm text-gray-500">
+          <div className="text-center mt-6 text-sm text-gray-500">
             or register with social platforms
           </div>
-          <div className="flex justify-center gap-4 mt-2">
+          <div className="flex justify-center gap-4 mt-4">
             <button
-              className="p-2 bg-gray-100 rounded-full hover:shadow focus:outline-none focus:ring-2 focus:ring-blue-300"
+              className="p-3 bg-gray-100 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-400"
               aria-label="Register with Google"
             >
-              <FcGoogle size={20} aria-hidden="true" />
+              <FcGoogle size={22} aria-hidden="true" />
             </button>
             <button
-              className="p-2 bg-gray-100 rounded-full hover:shadow focus:outline-none focus:ring-2 focus:ring-blue-300"
+              className="p-3 bg-gray-100 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-400"
               aria-label="Register with Facebook"
             >
-              <FaFacebookF
-                size={20}
-                className="text-blue-600"
-                aria-hidden="true"
-              />
+              <FaFacebookF size={22} className="text-blue-600" aria-hidden="true" />
             </button>
             <button
-              className="p-2 bg-gray-100 rounded-full hover:shadow focus:outline-none focus:ring-2 focus:ring-blue-300"
+              className="p-3 bg-gray-100 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-400"
               aria-label="Register with GitHub"
             >
-              <FaGithub
-                size={20}
-                className="text-blue-600"
-                aria-hidden="true"
-              />
+              <FaGithub size={22} className="text-gray-700" aria-hidden="true" />
             </button>
             <button
-              className="p-2 bg-gray-100 rounded-full hover:shadow focus:outline-none focus:ring-2 focus:ring-blue-300"
+              className="p-3 bg-gray-100 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-400"
               aria-label="Register with LinkedIn"
             >
-              <FaLinkedinIn
-                size={20}
-                className="text-blue-700"
-                aria-hidden="true"
-              />
+              <FaLinkedinIn size={22} className="text-blue-700" aria-hidden="true" />
             </button>
           </div>
         </div>
