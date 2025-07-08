@@ -5,7 +5,7 @@ import { FaFacebookF, FaGithub, FaLinkedinIn } from "react-icons/fa";
 
 const App = () => {
   return (
-    <div className="min-h-screen bg-gray-950 flex flex-col items-center justify-center   font-inter">
+    <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center   font-inter">
       {/* Logo */}
    
 
@@ -17,7 +17,7 @@ const App = () => {
           <p className="text-sm">Don't have an account?</p>
           <a href="/auth/Register">
    
-             <button className="mt-2 px-6 py-2 bg-yellow-400 border border-gray-200 text-gray-900 font-medium  hover:bg-blue-100 hover:text-blue-600 transition focus:outline-none focus:ring-2 focus:ring-blue-300">
+             <button className="mt-2 px-6 py-2 bg-yellow-400 border border-gray-200 text-gray-800 font-medium  hover:bg-blue-100 hover:text-blue-600 transition focus:outline-none focus:ring-2 focus:ring-blue-300">
       Register
           </button>
           </a>
@@ -25,7 +25,7 @@ const App = () => {
 
         {/* Login Form */}
         <div className="p-6">
-          <h3 className="text-xl font-semibold text-center mb-6 text-gray-100">Login</h3>
+          <h3 className="text-xl font-semibold text-center mb-6 text-gray-500">Login</h3>
 
           {/* Username */}
           <div className="mb-4 relative">
@@ -33,9 +33,9 @@ const App = () => {
               id="username"
               type="text"
               placeholder="Username"
-              className="w-full px-10 py-3 text-amber-50 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-300"
+              className="w-full px-10 py-3  border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-300"
             />
-            <FaUser className="absolute left-3 top-3.5 text-gray-100" />
+            <FaUser className="absolute left-3 top-3.5 text-gray-950" />
           </div>
 
           {/* Password */}
@@ -44,9 +44,9 @@ const App = () => {
               id="password"
               type="password"
               placeholder="Password"
-              className="w-full px-10 py-3 border text-amber-50 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-300"
+              className="w-full px-10 py-3 border  rounded-full focus:outline-none focus:ring-2 focus:ring-blue-300"
             />
-            <FaLock className="absolute left-3 top-3.5 text-gray-100" />
+            <FaLock className="absolute left-3 top-3.5 text-gray-950" />
           </div>
 
           {/* Forgot Password */}

@@ -5,7 +5,7 @@ import { FaFacebookF, FaGithub, FaLinkedinIn } from "react-icons/fa";
 
 const Register = () => {
   return (
-    <div className="flex items-center  justify-center min-h-screen bg-gray-950  font-sans">
+    <div className="flex items-center  justify-center min-h-screen bg-gray-100  font-sans">
       <div className=" w-full max-w-md rounded-lg shadow-lg overflow-hidden">
         {/* Header */}
         <div className="bg-amber-400 text-white text-center mt-1 p-6 rounded-l-full">
@@ -22,12 +22,12 @@ const Register = () => {
 
         {/* Registration Form */}
         <div className="p-6">
-          <h3 className="text-xl font-semibold text-center mb-6 text-gray-200">//hello
+          <h3 className="text-xl font-semibold text-center mb-6 text-gray-500">
             Register
           </h3>
 
           {/* Username */} 
-          <div className="mb-4 text-amber-50 relative">
+          <div className="mb-4 text-gray-500 relative">
             <label htmlFor="username" className="sr-only">
               Username
             </label>
@@ -35,7 +35,7 @@ const Register = () => {
               id="username"
               type="text"
               placeholder="Username"
-              className="w-full px-10 py-3 text-amber-50 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full px-10 py-3 text-gray-950 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
             <FaUser className="absolute left-3 top-3.5 text-gray-400" aria-hidden="true" />
           </div>
@@ -49,7 +49,7 @@ const Register = () => {
               id="email"
               type="email"
               placeholder="Email"
-              className="w-full px-10 py-3 text-amber-50 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full px-10 py-3 text-gray-950 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
             <FaEnvelope className="absolute left-3 top-3.5 text-gray-400" aria-hidden="true" />
           </div>
@@ -63,7 +63,7 @@ const Register = () => {
               id="password"
               type="password"
               placeholder="Password"
-              className="w-full px-10 py-3 border text-amber-50 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full px-10 py-3 border text-gray-950 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
             <FaLock className="absolute left-3 top-3.5 text-gray-400" aria-hidden="true" />
           </div>
@@ -77,7 +77,7 @@ const Register = () => {
               id="confirm-password"
               type="password"
               placeholder="Confirm Password"
-              className="w-full px-10 py-3 text-amber-50 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full px-10 py-3 text-gray-950 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
             <FaLock className="absolute left-3 top-3.5 text-gray-400" aria-hidden="true" />
           </div>
