@@ -22,7 +22,7 @@ const Register = () => {
 
         {/* Registration Form */}
         <div className="p-6">
-          <h3 className="text-xl font-semibold text-center mb-6 text-gray-200">
+          <h3 className="text-xl font-semibold text-center mb-6 text-gray-200">//hello
             Register
           </h3>
 
