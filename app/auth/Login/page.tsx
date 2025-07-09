@@ -12,12 +12,12 @@ const App = () => {
       {/* Login Card */}
       <div className=" w-full max-w-md  shadow-lg overflow-hidden">
         {/* Header */}
-        <div className="bg-amber-400 text-white text-center mt-1 p-6 rounded-l-full">
+        <div className="bg-blue-800 text-white text-center mt-1 p-6 rounded-l-full">
           <h2 className="text-xl font-bold">Hello, Welcome!</h2>
           <p className="text-sm">Don't have an account?</p>
           <a href="/auth/Register">
    
-             <button className="mt-2 px-6 py-2 bg-yellow-400 border border-gray-200 text-gray-800 font-medium  hover:bg-blue-100 hover:text-blue-600 transition focus:outline-none focus:ring-2 focus:ring-blue-300">
+             <button className="bg-blue-500 cursor-pointer mt-4 text-white hover:bg-blue-400 font-semibold py-2 px-6 rounded-full shadow-md transition duration-300">
       Register
           </button>
           </a>
@@ -33,9 +33,9 @@ const App = () => {
               id="username"
               type="text"
               placeholder="Username"
-              className="w-full px-10 py-3  border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-300"
+              className="w-full px-8 py-2  border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-300"
             />
-            <FaUser className="absolute left-3 top-3.5 text-gray-950" />
+            <FaUser className="absolute left-3 top-3.5 text-gray-400" />
           </div>
 
           {/* Password */}
@@ -44,9 +44,9 @@ const App = () => {
               id="password"
               type="password"
               placeholder="Password"
-              className="w-full px-10 py-3 border  rounded-full focus:outline-none focus:ring-2 focus:ring-blue-300"
+              className="w-full px-8 py-2 border  rounded-full focus:outline-none focus:ring-2 focus:ring-blue-300"
             />
-            <FaLock className="absolute left-3 top-3.5 text-gray-950" />
+            <FaLock className="absolute left-3 top-3.5 text-gray-400" />
           </div>
 
           {/* Forgot Password */}
@@ -58,7 +58,7 @@ const App = () => {
           </button>
 
           {/* Login Button */}
-          <button className="w-full bg-amber-400 text-white py-3 rounded-full hover:bg-blue-600 transition font-medium focus:outline-none focus:ring-2 focus:ring-blue-300">
+          <button className="w-full cursor-pointer bg-blue-800 text-white py-3 rounded-full hover:bg-blue-600 transition font-medium focus:outline-none focus:ring-2 focus:ring-blue-300">
             Login
           </button>
 
@@ -67,16 +67,16 @@ const App = () => {
             or login with social platforms
           </div>
           <div className="flex justify-center gap-4 mt-4">
-            <button className="p-3 bg-gray-100 rounded-full hover:shadow focus:outline-none focus:ring-2 focus:ring-blue-300" aria-label="Login with Google">
+            <button className="p-3 cursor-pointer bg-gray-100 rounded-full hover:shadow focus:outline-none focus:ring-2 focus:ring-blue-300" aria-label="Login with Google">
               <FcGoogle size={22} />
             </button>
-            <button className="p-3 bg-gray-100 rounded-full hover:shadow focus:outline-none focus:ring-2 focus:ring-blue-300" aria-label="Login with Facebook">
+            <button className="p-3 cursor-pointer bg-gray-100 rounded-full hover:shadow focus:outline-none focus:ring-2 focus:ring-blue-300" aria-label="Login with Facebook">
               <FaFacebookF size={22} className="text-blue-600" />
             </button>
-            <button className="p-3 bg-gray-100 rounded-full hover:shadow focus:outline-none focus:ring-2 focus:ring-blue-300" aria-label="Login with GitHub">
+            <button className="p-3 cursor-pointer bg-gray-100 rounded-full hover:shadow focus:outline-none focus:ring-2 focus:ring-blue-300" aria-label="Login with GitHub">
               <FaGithub size={22} className="text-gray-700" />
             </button>
-            <button className="p-3 bg-gray-100 rounded-full hover:shadow focus:outline-none focus:ring-2 focus:ring-blue-300" aria-label="Login with LinkedIn">
+            <button className="p-3 cursor-pointer bg-gray-100 rounded-full hover:shadow focus:outline-none focus:ring-2 focus:ring-blue-300" aria-label="Login with LinkedIn">
               <FaLinkedinIn size={22} className="text-blue-700" />
             </button>
           </div>
