@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Homepage from "./components/Hero";
+import Homepage from "./auth/Login/page";
 
 export default function Home() {
   const [loading, setLoading] = useState(true);
