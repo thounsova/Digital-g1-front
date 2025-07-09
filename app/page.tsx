@@ -15,9 +15,9 @@ export default function Home() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen  bg-amber-400">
+      <div className="flex items-center justify-center min-h-screen  bg-white">
         <img
-          src="https://i.pinimg.com/originals/4e/f0/6f/4ef06fe341c30c1d090165b007bbd1cc.gif"
+          src="https://logodix.com/logo/467939.gif"
           alt="Legend Cinema"
           className="w-64 h-auto animate-pulse"
         />
