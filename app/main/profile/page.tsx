@@ -3,7 +3,6 @@ import Card from "../Card/page";
 
 import { useState } from "react";
 
-const tabs = ["Minimal", "Categories", "Tracks"];
 
 const userData = {
   email: "arain@gmail.com",
@@ -84,24 +83,10 @@ export default function ProfilePage() {
       </div>
 
       {/* Tabs */}
-      <div className="mt-6 flex overflow-x-auto px-4 gap-4 text-sm text-gray-500">
-        {tabs.map((tab) => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`whitespace-nowrap pb-1 border-b-2 ${
-              activeTab === tab
-                ? "border-purple-600 text-purple-600 font-semibold"
-                : "border-transparent"
-            }`}
-          >
-            {tab}
-          </button>
-        ))}
-      </div>
+   
 
       {/* Cards */}
-      <div className="mt-២ grid grid-cols-2 gap-4 px-4 "></div>
+      <div className="mt-2 grid grid-cols-2 gap-4 px-4 "></div>
       <Card />
     </div>
   );
