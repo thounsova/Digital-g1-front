@@ -1,9 +1,11 @@
-export default function MainLayout({ children }: { children: React.ReactNode }) {
+export default function AuthLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <html>
-      <body className="bg-gray-900 text-white min-h-screen">
-        <main className="p-6">{children}</main>
-      </body>
-    </html>
+    <div className="bg-gray-100 text-gray-900 min-h-screen flex items-center justify-center">
+      <main className="w-full max-w-md s">{children}</main>
+    </div>
   );
 }
