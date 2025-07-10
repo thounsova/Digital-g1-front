@@ -3,7 +3,6 @@ import Card from "../Card/page";
 
 import { useState } from "react";
 
-
 const userData = {
   email: "arain@gmail.com",
   password: "reach123",
@@ -44,12 +43,14 @@ export default function ProfilePage() {
 
         {/* Action Buttons */}
         <div className="flex justify-center gap-4 mt-4">
-          <button className=" bg-purple-300 px-6 py-2 rounded-full text-sm">
+          <button className=" cursor-pointer hover:border-blue-500 bg-purple-300 px-6 py-2 rounded-full text-sm">
             Edit Profile
           </button>
-          <button className="border border-gray-400 bg-purple-600 px-6 py-2 text-white rounded-full text-sm">
-            Create ID Card
-          </button>
+          <a href="/auth/CreateForm">
+            <button className="border cursor-pointer border-gray-400 bg-purple-600 px-6 py-2 text-white rounded-full text-sm">
+              Create ID Card
+            </button>
+          </a>
         </div>
 
         {/* Stats */}
@@ -83,7 +84,6 @@ export default function ProfilePage() {
       </div>
 
       {/* Tabs */}
-   
 
       {/* Cards */}
       <div className="mt-2 grid grid-cols-2 gap-4 px-4 "></div>
