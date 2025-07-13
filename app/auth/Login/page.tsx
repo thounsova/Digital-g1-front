@@ -1,173 +1,127 @@
 "use client";
-import React, { useState } from "react";
-import { FaUser, FaLock } from "react-icons/fa";
-import { FcGoogle } from "react-icons/fc";
-import { FaFacebookF, FaGithub, FaLinkedinIn } from "react-icons/fa";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import z from "zod";
+import { useMutation } from "@tanstack/react-query";
+import { authRequest } from "@/lib/api/auth-api";
+import { AuthLoginType } from "@/app/types/auth";
+import { useRouter } from "next/navigation";
+
+const LoginSchema = z.object({
+  user_name: z.string().min(2, {
+    message: "Username must be at least 2 characters.",
+  }),
+  password: z.string().min(2, {
+    message: "Password must be at least 2 characters.",
+  }),
+});
 
 const Login = () => {
-  const [formData, setFormData] = useState({ username: "", password: "" });
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  const [loading, setLoading] = useState(false);
-  const [serverError, setServerError] = useState("");
+  const navigate = useRouter();
+  const { AUTH_LOGIN } = authRequest();
+  const form = useForm<z.infer<typeof LoginSchema>>({
+    resolver: zodResolver(LoginSchema),
+    defaultValues: {
+      user_name: "",
+      password: "",
+    },
+  });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.id]: e.target.value });
-    setErrors({ ...errors, [e.target.id]: "" });
-    setServerError("");
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    const newErrors: { [key: string]: string } = {};
-    if (!formData.username.trim()) newErrors.username = "Username is required";
-    if (!formData.password.trim()) newErrors.password = "Password is required";
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
-
-    setLoading(true);
-    setServerError("");
-
-    try {
-      const response = await fetch("{{baseUrl}}/api/v1/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        alert("Login successful!");
-        console.log("Login response data:", data);
-      } else {
-        setServerError(data.message || "Login failed");
+  const { mutate, isPending } = useMutation({
+    mutationKey: ["login"],
+    mutationFn: (payload: AuthLoginType) => AUTH_LOGIN(payload),
+    onSuccess: (data) => {
+      if (data) {
+        navigate.push("/");
       }
-    } catch (error) {
-      setServerError("Network error. Please try again.");
-      console.error("Login error:", error);
-    } finally {
-      setLoading(false);
-    }
+    },
+  });
+
+  const onSubmit = (data: z.infer<typeof LoginSchema>) => {
+    console.log(data, "===data login");
+    mutate(data);
   };
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center font-inter">
-      <div className="w-full max-w-md shadow-lg overflow-hidden bg-white">
-        <div className="bg-blue-800 text-white text-center mt-1 p-6 rounded-l-full">
-          <h2 className="text-xl font-bold">Hello, Welcome!</h2>
+      <div className="w-full max-w-sm shadow-md overflow-hidden bg-white ">
+        <div className="bg-blue-800 text-white text-center p-4 rounded-l-full">
+          <h2 className="text-lg font-bold">Welcome Back!</h2>
           <p className="text-sm">Don't have an account?</p>
           <a href="/auth/Register">
-            <button className="bg-blue-500 mt-4 text-white hover:bg-blue-400 font-semibold py-2 px-6 rounded-full shadow-md transition duration-300">
+            <button className="bg-blue-500 mt-2 h-10 w-34 text-white hover:bg-blue-400 font-medium py-1.5 px-4 rounded-full shadow-sm transition duration-300 text-sm">
               Register
             </button>
           </a>
         </div>
 
-        <form className="p-6" onSubmit={handleSubmit}>
-          <h3 className="text-xl font-semibold text-center mb-6 text-gray-500">
-            Login
-          </h3>
-
-          <div className="mb-4 relative">
-            <input
-              id="username"
-              type="text"
-              placeholder="Username"
-              value={formData.username}
-              onChange={handleChange}
-              className={`w-full px-8 py-2 border rounded-full focus:outline-none focus:ring-2 ${
-                errors.username ? "border-red-500" : "focus:ring-blue-300"
-              }`}
-              disabled={loading}
-            />
-            <FaUser className="absolute left-3 top-3.5 text-gray-400" />
-            {errors.username && (
-              <p className="text-red-500 text-sm mt-1">{errors.username}</p>
-            )}
-          </div>
-
-          <div className="mb-4 relative">
-            <input
-              id="password"
-              type="password"
-              placeholder="Password"
-              value={formData.password}
-              onChange={handleChange}
-              className={`w-full px-8 py-2 border rounded-full focus:outline-none focus:ring-2 ${
-                errors.password ? "border-red-500" : "focus:ring-blue-300"
-              }`}
-              disabled={loading}
-            />
-            <FaLock className="absolute left-3 top-3.5 text-gray-400" />
-            {errors.password && (
-              <p className="text-red-500 text-sm mt-1">{errors.password}</p>
-            )}
-          </div>
-
-          <a
-            href="/auth/ForgotPassword"
-            className="text-center text-sm mb-4 text-blue-500 hover:underline w-full block"
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="p-4 space-y-4"
           >
-            Forgot password?
-          </a>
+            <h3 className="text-lg font-semibold text-center text-gray-600">
+              Login
+            </h3>
 
-          {serverError && (
-            <p className="text-red-600 text-center mb-4 font-semibold">
-              {serverError}
-            </p>
-          )}
+            <FormField
+              control={form.control}
+              name="user_name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-sm">Username</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Username"
+                      {...field}
+                      className="w-full px-6 h-14 py-2 text-sm border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-300"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <button
-            type="submit"
-            disabled={loading}
-            className={`w-full bg-blue-800 text-white py-3 rounded-full hover:bg-blue-600 transition font-medium focus:outline-none focus:ring-2 focus:ring-blue-300 ${
-              loading ? "opacity-50 cursor-not-allowed" : ""
-            }`}
-          >
-            {loading ? "Logging in..." : "Login"}
-          </button>
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-sm">Password</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="password"
+                      placeholder="Password"
+                      {...field}
+                      className="w-full px-6 h-14 py-2 text-sm border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-300"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <div className="text-center mt-6 text-sm text-gray-500">
-            or login with social platforms
-          </div>
-
-          <div className="flex justify-center gap-4 mt-4">
-            <button
-              className="p-3 bg-gray-100 rounded-full hover:shadow"
-              aria-label="Login with Google"
-              disabled={loading}
+            <Button
+              type="submit"
+              disabled={isPending}
+              className={`w-full bg-blue-800 h-14 text-white py-2 text-sm rounded-full hover:bg-blue-600 transition font-medium focus:outline-none focus:ring-2 focus:ring-blue-300 ${
+                isPending ? "opacity-50 cursor-not-allowed" : ""
+              }`}
             >
-              <FcGoogle size={22} />
-            </button>
-            <button
-              className="p-3 bg-gray-100 rounded-full hover:shadow"
-              aria-label="Login with Facebook"
-              disabled={loading}
-            >
-              <FaFacebookF size={22} className="text-blue-600" />
-            </button>
-            <button
-              className="p-3 bg-gray-100 rounded-full hover:shadow"
-              aria-label="Login with GitHub"
-              disabled={loading}
-            >
-              <FaGithub size={22} className="text-gray-700" />
-            </button>
-            <button
-              className="p-3 bg-gray-100 rounded-full hover:shadow"
-              aria-label="Login with LinkedIn"
-              disabled={loading}
-            >
-              <FaLinkedinIn size={22} className="text-blue-700" />
-            </button>
-          </div>
-        </form>
+              {isPending ? "Logging in..." : "Login"}
+            </Button>
+          </form>
+        </Form>
       </div>
     </div>
   );

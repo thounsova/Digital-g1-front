@@ -1,242 +1,182 @@
 "use client";
-import React, { useState } from "react";
-import { FaUser, FaLock, FaEnvelope } from "react-icons/fa";
-import { FcGoogle } from "react-icons/fc";
-import { FaFacebookF, FaGithub, FaLinkedinIn } from "react-icons/fa";
-
-type FormData = {
-  username: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-};
-
-type Errors = Partial<Record<keyof FormData, string>>;
-
-function useRegisterForm() {
-  const [formData, setFormData] = useState<FormData>({
-    username: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
-  const [errors, setErrors] = useState<Errors>({});
-  const [loading, setLoading] = useState(false);
-
-  const validate = (): boolean => {
-    const newErrors: Errors = {};
-    if (!formData.username.trim()) newErrors.username = "Username is required";
-    if (!formData.email.trim()) newErrors.email = "Email is required";
-    if (!formData.password) newErrors.password = "Password is required";
-    if (!formData.confirmPassword)
-      newErrors.confirmPassword = "Confirm password is required";
-    else if (formData.password !== formData.confirmPassword)
-      newErrors.confirmPassword = "Passwords do not match";
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData((prev) => ({ ...prev, [e.target.id]: e.target.value }));
-    setErrors((prev) => ({ ...prev, [e.target.id]: "" }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!validate()) return;
-
-    setLoading(true);
-
-    try {
-      const response = await fetch(
-        "https://your-api-domain.com/api/v1/auth/register",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            // Authorization: "Bearer YOUR_API_TOKEN", // if needed
-          },
-          body: JSON.stringify({
-            username: formData.username,
-            email: formData.email,
-            password: formData.password,
-          }),
-        }
-      );
-
-      const data = await response.json();
-
-      if (response.ok) {
-        alert("Registration successful!");
-        console.log("User registered:", data);
-        // Redirect here if needed
-      } else {
-        alert(data.message || "Registration failed.");
-        console.error("Server error:", data);
-      }
-    } catch (error) {
-      console.error("Request failed:", error);
-      alert("Network error. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return { formData, errors, loading, handleChange, handleSubmit };
-}
+import { useMutation } from "@tanstack/react-query";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { useDeviceStore } from "@/app/Store/decive-store";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { useEffect } from "react";
+import { AuthRegisterType } from "@/app/types/auth";
+import { authRequest } from "@/lib/api/auth-api";
+const RegisterSchema = z.object({
+  user_name: z.string().min(2, {
+    message: "Username must be at least 2 characters.",
+  }),
+  full_name: z.string().min(2, {
+    message: "Fullname must be at least 2 characters.",
+  }),
+  email: z.string().email({
+    message: "Fullname must be at least 2 characters.",
+  }),
+  password: z.string().min(2, {
+    message: "Password must be at least 2 characters.",
+  }),
+});
 
 const Register = () => {
-  const { formData, errors, loading, handleChange, handleSubmit } =
-    useRegisterForm();
+  const { AUTH_REGISTER } = authRequest();
+  const { device, fetchDeviceInfo } = useDeviceStore();
+  console.log(device);
+  const form = useForm<z.infer<typeof RegisterSchema>>({
+    resolver: zodResolver(RegisterSchema),
+    defaultValues: {
+      user_name: "",
+      password: "",
+      email: "",
+      full_name: "",
+    },
+  });
+
+  const { mutate, isPending } = useMutation({
+    mutationKey: ["register"],
+    mutationFn: (payload: AuthRegisterType) => AUTH_REGISTER(payload),
+    onSuccess: (data) => {
+      console.log("response data", data);
+    },
+  });
+
+  function onSubmit(data: z.infer<typeof RegisterSchema>) {
+    mutate({
+      ...data,
+      device_name: device?.device_name,
+      device_type: device?.device_type,
+      os: device?.os,
+      browser: device?.browser,
+      ip_address: device?.ip_address,
+    });
+  }
+  useEffect(() => {
+    fetchDeviceInfo();
+  }, [fetchDeviceInfo]);
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 font-sans">
-      <div className="w-full max-w-md rounded-lg shadow-lg overflow-hidden bg-white">
-        <div className="bg-blue-800 text-white text-center mt-1 p-6 rounded-l-full">
-          <h2 className="text-xl font-bold">Create Your Account</h2>
-          <p className="text-sm">Already have an account?</p>
-          <a href="/auth/Login">
-            <button className="bg-blue-500 mt-4 text-white hover:bg-blue-400 font-semibold py-2 px-6 rounded-full shadow-md transition duration-300">
-              Log in
-            </button>
-          </a>
-        </div>
-
-        <form className="p-6" onSubmit={handleSubmit}>
-          <h3 className="text-xl font-semibold text-center mb-6 text-gray-500">
-            Register
-          </h3>
-
-          {/* Username */}
-          <div className="mb-4 relative">
-            <input
-              id="username"
-              type="text"
-              placeholder="Username"
-              value={formData.username}
-              onChange={handleChange}
-              className={`w-full px-8 py-2 border rounded-full focus:outline-none focus:ring-2 ${
-                errors.username ? "border-red-500" : "focus:ring-blue-300"
-              }`}
-              disabled={loading}
-            />
-            <FaUser className="absolute left-3 top-3.5 text-gray-400" />
-            {errors.username && (
-              <p className="text-red-500 text-sm mt-1">{errors.username}</p>
-            )}
-          </div>
-
-          {/* Email */}
-          <div className="mb-4 relative">
-            <input
-              id="email"
-              type="email"
-              placeholder="Email"
-              value={formData.email}
-              onChange={handleChange}
-              className={`w-full px-8 py-2 border rounded-full focus:outline-none focus:ring-2 ${
-                errors.email ? "border-red-500" : "focus:ring-blue-300"
-              }`}
-              disabled={loading}
-            />
-            <FaEnvelope className="absolute left-3 top-3.5 text-gray-400" />
-            {errors.email && (
-              <p className="text-red-500 text-sm mt-1">{errors.email}</p>
-            )}
-          </div>
-
-          {/* Password */}
-          <div className="mb-4 relative">
-            <input
-              id="password"
-              type="password"
-              placeholder="Password"
-              value={formData.password}
-              onChange={handleChange}
-              className={`w-full px-8 py-2 border rounded-full focus:outline-none focus:ring-2 ${
-                errors.password ? "border-red-500" : "focus:ring-blue-300"
-              }`}
-              disabled={loading}
-            />
-            <FaLock className="absolute left-3 top-3.5 text-gray-400" />
-            {errors.password && (
-              <p className="text-red-500 text-sm mt-1">{errors.password}</p>
-            )}
-          </div>
-
-          {/* Confirm Password */}
-          <div className="mb-4 relative">
-            <input
-              id="confirmPassword"
-              type="password"
-              placeholder="Confirm Password"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              className={`w-full px-8 py-2 border rounded-full focus:outline-none focus:ring-2 ${
-                errors.confirmPassword
-                  ? "border-red-500"
-                  : "focus:ring-blue-300"
-              }`}
-              disabled={loading}
-            />
-            <FaLock className="absolute left-3 top-3.5 text-gray-400" />
-            {errors.confirmPassword && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.confirmPassword}
-              </p>
-            )}
-          </div>
-
-          {/* Submit Button */}
-          <button
-            type="submit"
-            className={`w-full bg-blue-800 text-white py-3 rounded-full hover:bg-blue-600 transition font-medium focus:outline-none focus:ring-2 focus:ring-blue-300 ${
-              loading ? "opacity-50 cursor-not-allowed" : ""
-            }`}
-            disabled={loading}
-          >
-            {loading ? "Registering..." : "Register"}
-          </button>
-
-          {/* Social Login */}
-          <div className="text-center mt-6 text-sm text-gray-500">
-            or register with social platforms
-          </div>
-          <div className="flex justify-center gap-4 mt-4">
-            <button
-              className="p-3 bg-gray-100 rounded-full hover:shadow"
-              aria-label="Google"
-              disabled={loading}
-            >
-              <FcGoogle size={22} />
-            </button>
-            <button
-              className="p-3 bg-gray-100 rounded-full hover:shadow"
-              aria-label="Facebook"
-              disabled={loading}
-            >
-              <FaFacebookF size={22} className="text-blue-600" />
-            </button>
-            <button
-              className="p-3 bg-gray-100 rounded-full hover:shadow"
-              aria-label="GitHub"
-              disabled={loading}
-            >
-              <FaGithub size={22} className="text-gray-700" />
-            </button>
-            <button
-              className="p-3 bg-gray-100 rounded-full hover:shadow"
-              aria-label="LinkedIn"
-              disabled={loading}
-            >
-              <FaLinkedinIn size={22} className="text-blue-700" />
-            </button>
-          </div>
-        </form>
-      </div>
+   <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center font-inter">
+  <div className="w-full max-w-md shadow-lg overflow-hidden bg-white">
+    <div className="bg-blue-800 text-white text-center mt-1 p-6 rounded-l-full">
+      <h2 className="text-xl font-bold">Welcome Aboard!</h2>
+      <p className="text-sm">Already have an account?</p>
+      <a href="/auth/Login">
+        <button className="bg-blue-500 mt-4 text-white hover:bg-blue-400 font-semibold py-2 px-6 rounded-full shadow-md transition duration-300">
+          Login
+        </button>
+      </a>
     </div>
+
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="p-6 space-y-6"
+      >
+        <h3 className="text-xl font-semibold text-center text-gray-500">
+          Register
+        </h3>
+
+        <FormField
+          control={form.control}
+          name="user_name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Username</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder="Username"
+                  {...field}
+                  className="w-full h-14 px-8 py- border rounded-full focus:outline-none focus:ring-2"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="full_name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Full Name</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder="Full Name"
+                  {...field}
+                  className="w-full px-8 h-14 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-300"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder="Email"
+                  {...field}
+                  className="w-full px-8 h-14 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-300"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Password</FormLabel>
+              <FormControl>
+                <Input
+                  type="password"
+                  placeholder="Password"
+                  {...field}
+                  className="w-full px-8 h-14 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-300"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <Button
+          type="submit"
+          disabled={isPending}
+          className={`w-full bg-blue-800 h-14 text-white py-3 rounded-full hover:bg-blue-600 transition font-medium focus:outline-none focus:ring-2 focus:ring-blue-300 ${
+            isPending ? "opacity-50 cursor-not-allowed" : ""
+          }`}
+        >
+          {isPending ? "Submitting..." : "Register"}
+        </Button>
+      </form>
+    </Form>
+  </div>
+</div>
+
   );
 };
-
 export default Register;
