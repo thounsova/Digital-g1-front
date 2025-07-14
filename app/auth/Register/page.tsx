@@ -49,7 +49,7 @@ const Register = () => {
   const { mutate, isPending } = useMutation({
     mutationKey: ["register"],
     mutationFn: (payload: AuthRegisterType) => AUTH_REGISTER(payload),
-    onSuccess: (data) => {
+    onSuccess: (data: any) => {
       console.log("response data", data);
     },
   });

@@ -40,7 +40,7 @@ const Login = () => {
   const { mutate, isPending } = useMutation({
     mutationKey: ["login"],
     mutationFn: (payload: AuthLoginType) => AUTH_LOGIN(payload),
-    onSuccess: (data) => {
+    onSuccess: (data: any) => {
       if (data) {
         navigate.push("/");
       }
