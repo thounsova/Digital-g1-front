@@ -69,114 +69,113 @@ const Register = () => {
   }, [fetchDeviceInfo]);
 
   return (
-   <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center font-inter">
-  <div className="w-full max-w-md shadow-lg overflow-hidden bg-white">
-    <div className="bg-blue-800 text-white text-center mt-1 p-6 rounded-l-full">
-      <h2 className="text-xl font-bold">Welcome Aboard!</h2>
-      <p className="text-sm">Already have an account?</p>
-      <a href="/auth/Login">
-        <button className="bg-blue-500 mt-4 text-white hover:bg-blue-400 font-semibold py-2 px-6 rounded-full shadow-md transition duration-300">
-          Login
-        </button>
-      </a>
+    <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center font-inter">
+      <div className="w-full max-w-md shadow-lg overflow-hidden bg-white">
+        <div className="bg-blue-800 text-white text-center mt-1 p-6 rounded-l-full">
+          <h2 className="text-xl font-bold">Welcome Aboard!</h2>
+          <p className="text-sm">Already have an account?</p>
+          <a href="/auth/Login">
+            <button className="bg-blue-500 mt-4 text-white hover:bg-blue-400 font-semibold py-2 px-6 rounded-full shadow-md transition duration-300">
+              Login
+            </button>
+          </a>
+        </div>
+
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="p-6 space-y-6"
+          >
+            <h3 className="text-xl font-semibold text-center text-gray-500">
+              Register
+            </h3>
+
+            <FormField
+              control={form.control}
+              name="user_name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Username</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Username"
+                      {...field}
+                      className="w-full h-12 px-8 py- border rounded-full focus:outline-none focus:ring-2"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="full_name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Full Name</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Full Name"
+                      {...field}
+                      className="w-full px-8 h-12 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-300"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Email"
+                      {...field}
+                      className="w-full px-8  h-12 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-300"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="password"
+                      placeholder="Password"
+                      {...field}
+                      className="w-full px-8 h-12 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-300"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <Button
+              type="submit"
+              disabled={isPending}
+              className={`w-full bg-blue-800 h-12 text-white py-3 rounded-full hover:bg-blue-600 transition font-medium focus:outline-none focus:ring-2 focus:ring-blue-300 ${
+                isPending ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+            >
+              {isPending ? "Submitting..." : "Register"}
+            </Button>
+          </form>
+        </Form>
+      </div>
     </div>
-
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="p-6 space-y-6"
-      >
-        <h3 className="text-xl font-semibold text-center text-gray-500">
-          Register
-        </h3>
-
-        <FormField
-          control={form.control}
-          name="user_name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Username</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="Username"
-                  {...field}
-                  className="w-full h-14 px-8 py- border rounded-full focus:outline-none focus:ring-2"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="full_name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Full Name</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="Full Name"
-                  {...field}
-                  className="w-full px-8 h-14 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-300"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="Email"
-                  {...field}
-                  className="w-full px-8 h-14 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-300"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Password</FormLabel>
-              <FormControl>
-                <Input
-                  type="password"
-                  placeholder="Password"
-                  {...field}
-                  className="w-full px-8 h-14 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-300"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <Button
-          type="submit"
-          disabled={isPending}
-          className={`w-full bg-blue-800 h-14 text-white py-3 rounded-full hover:bg-blue-600 transition font-medium focus:outline-none focus:ring-2 focus:ring-blue-300 ${
-            isPending ? "opacity-50 cursor-not-allowed" : ""
-          }`}
-        >
-          {isPending ? "Submitting..." : "Register"}
-        </Button>
-      </form>
-    </Form>
-  </div>
-</div>
-
   );
 };
 export default Register;

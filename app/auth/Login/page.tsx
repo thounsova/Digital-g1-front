@@ -48,7 +48,7 @@ const Login = () => {
   });
 
   const onSubmit = (data: z.infer<typeof LoginSchema>) => {
-    console.log(data, "===data login");
+    console.log(data, "===data ==== login");
     mutate(data);
   };
 
