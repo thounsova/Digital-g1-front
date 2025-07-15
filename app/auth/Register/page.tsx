@@ -1,10 +1,12 @@
 "use client";
+
 import { useMutation } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useDeviceStore } from "@/app/Store/decive-store";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 import {
   Form,
   FormControl,
@@ -17,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import { useEffect } from "react";
 import { AuthRegisterType } from "@/app/types/auth";
 import { authRequest } from "@/lib/api/auth-api";
+
 const RegisterSchema = z.object({
   user_name: z.string().min(2, {
     message: "Username must be at least 2 characters.",
@@ -25,7 +28,7 @@ const RegisterSchema = z.object({
     message: "Fullname must be at least 2 characters.",
   }),
   email: z.string().email({
-    message: "Fullname must be at least 2 characters.",
+    message: "Email must be valid.",
   }),
   password: z.string().min(2, {
     message: "Password must be at least 2 characters.",
@@ -33,9 +36,10 @@ const RegisterSchema = z.object({
 });
 
 const Register = () => {
+  const router = useRouter();
   const { AUTH_REGISTER } = authRequest();
   const { device, fetchDeviceInfo } = useDeviceStore();
-  console.log(device);
+
   const form = useForm<z.infer<typeof RegisterSchema>>({
     resolver: zodResolver(RegisterSchema),
     defaultValues: {
@@ -51,6 +55,12 @@ const Register = () => {
     mutationFn: (payload: AuthRegisterType) => AUTH_REGISTER(payload),
     onSuccess: (data) => {
       console.log("response data", data);
+      if (data) {
+        router.push("/"); // ✅ navigate to homepage
+      }
+    },
+    onError: (error) => {
+      console.error("Registration error:", error);
     },
   });
 
@@ -64,6 +74,7 @@ const Register = () => {
       ip_address: device?.ip_address,
     });
   }
+
   useEffect(() => {
     fetchDeviceInfo();
   }, [fetchDeviceInfo]);
@@ -100,7 +111,7 @@ const Register = () => {
                     <Input
                       placeholder="Username"
                       {...field}
-                      className="w-full h-12 px-8 py- border rounded-full focus:outline-none focus:ring-2"
+                      className="w-full h-12 px-8 border rounded-full focus:outline-none focus:ring-2"
                     />
                   </FormControl>
                   <FormMessage />
@@ -118,7 +129,7 @@ const Register = () => {
                     <Input
                       placeholder="Full Name"
                       {...field}
-                      className="w-full px-8 h-12 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-300"
+                      className="w-full px-8 h-12 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-300"
                     />
                   </FormControl>
                   <FormMessage />
@@ -136,7 +147,7 @@ const Register = () => {
                     <Input
                       placeholder="Email"
                       {...field}
-                      className="w-full px-8  h-12 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-300"
+                      className="w-full px-8 h-12 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-300"
                     />
                   </FormControl>
                   <FormMessage />
@@ -155,7 +166,7 @@ const Register = () => {
                       type="password"
                       placeholder="Password"
                       {...field}
-                      className="w-full px-8 h-12 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-300"
+                      className="w-full px-8 h-12 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-300"
                     />
                   </FormControl>
                   <FormMessage />
@@ -178,4 +189,5 @@ const Register = () => {
     </div>
   );
 };
+
 export default Register;
