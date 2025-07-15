@@ -41,9 +41,11 @@ const Login = () => {
     mutationKey: ["login"],
     mutationFn: (payload: AuthLoginType) => AUTH_LOGIN(payload),
     onSuccess: (data) => {
-      if (data) {
-        navigate.push("/");
-      }
+      console.log(data, "===data ==== login success");
+
+      // if (data) {
+      //   navigate.push("/");
+      // }
     },
   });
 

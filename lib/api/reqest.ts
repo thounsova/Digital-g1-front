@@ -1,4 +1,4 @@
-import { CookieName } from "@/app/types/cookie-emun"
+import { CookieName } from "@/app/types/cookie-emun";
 import axios, { type AxiosRequestConfig } from "axios";
 import Cookies from "js-cookie";
 import { useAuthStore } from "@/app/Store/authStore";
@@ -7,7 +7,7 @@ import { useAuthStore } from "@/app/Store/authStore";
 // export const injectStore = (_store: Store) => {};
 
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:3000/api/v1", // Replace with your API base URL
+  baseURL: "http://localhost:8000/api/v1", // Replace with your API base URL
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",
@@ -68,7 +68,7 @@ axiosInstance.interceptors.response.use(
           // const refreshToken = useAuthStore.getState().refreshToken;
           const response = await axiosInstance({
             method: "POST",
-            url: `http://localhost:3000/api/v1/auth/refresh-token`,
+            url: `http://localhost:8000/api/v1/auth/refresh-token`,
             // data: {
             //   refreshToken: refreshToken,
             // },
