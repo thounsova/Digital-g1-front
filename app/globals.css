@@ -146,4 +146,17 @@
   body {
     @apply bg-background text-foreground;
   }
+  @keyframes gradient-xy {
+  0%, 100% {
+    background-position: 0% 0%;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
+}
+
+.animate-gradient-xy {
+  background-size: 300% 300%;
+  animation: gradient-xy 8s ease infinite;
+}
 }
