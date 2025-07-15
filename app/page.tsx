@@ -3,8 +3,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useQuery } from "@tanstack/react-query";
 import { userRequest } from "@/lib/api/user-api";
 import { User, Mail } from "lucide-react";
-// import { CardItem } from "@/types/card-type";
-// import CorporateCard from "@/components/profile-card/corporate-card";
+import { CardItem } from "@/app/types/card-type";
+import CorporateCard from "@/components/profile-card/corporate-card";
 
 export default function Home() {
   const { PROFILE } = userRequest();
@@ -53,7 +53,8 @@ export default function Home() {
         </div>
         <div className="w-full max-w-md mx-auto p-4">
           <div className="grid grid-cols-1 gap-4">
-            {/* {me?.data?.idCard?.map((card: CardItem, idx: number) => {
+            {me?.data?.idCard?.map((card: CardItem, idx: number) => {
+              console.log(card, "===card====");
               return (
                 <div key={idx}>
                   {card.card_type === "Corporate" && (
@@ -65,7 +66,7 @@ export default function Home() {
                   {card.card_type === "Minimal" && <div>test</div>}
                 </div>
               );
-            })} */}
+            })}
           </div>
         </div>
       </div>

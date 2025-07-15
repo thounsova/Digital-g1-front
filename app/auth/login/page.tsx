@@ -43,9 +43,9 @@ const Login = () => {
     onSuccess: (data) => {
       console.log(data, "===data ==== login success");
 
-      // if (data) {
-      //   navigate.push("/");
-      // }
+      if (data) {
+        navigate.push("/");
+      }
     },
   });
 

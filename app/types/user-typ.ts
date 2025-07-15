@@ -1,12 +1,13 @@
-// import { CardItem } from "./card-type";
+import { CardItem } from "./card-type";
 
 export interface IUser {
   message: string;
   data: UserData;
 }
+
 export interface UserData {
   id: string;
-  full_name?: string | undefined;
+  full_name?: string;
   user_name: string;
   email: string;
   password: string;
@@ -16,5 +17,6 @@ export interface UserData {
   roles: string[];
   created_at: string;
   updated_at: string;
-//   idCard: CardItem[];
+
+  idCard: CardItem[]; // ✅ This must be here
 }
