@@ -85,128 +85,117 @@ export default function Home() {
 
   if (isLoading) return "Loading...";
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-white via-slate-100 to-slate-200 py-8 px-4 sm:px-6">
-      <div className="w-full max-w-xl mx-auto bg-white shadow-md overflow-hidden mb-8 relative rounded-2xl">
-        <div className="h-32 bg-gradient-to-r from-blue-500 to-pink-500 relative rounded-t-2xl">
-          <img
-            src="https://i.imgur.com/MHWLac7.gif"
-            className="h-32 w-full object-cover rounded-t-2xl"
-            alt="Banner"
-          />
-          <div className="absolute inset-0 bg-black/10 rounded-t-2xl" />
-          <Button
-            variant="destructive"
-            onClick={handleLogout}
-            className="absolute top-2 right-0 rounded-l-full text-gray-950 bg-blue-200 hover:bg-blue-500"
-          >
-            <LogOut />
-          </Button>
-        </div>
-
-        <div className="relative px-6 pb-6">
-          <div className="flex justify-center -mt-14 mb-4">
-            <Avatar className="w-24 h-24 border-4 border-white shadow-md">
-              <AvatarImage src={me?.data?.avatar} alt="@user" />
-              <AvatarFallback>
-                {me?.data?.full_name?.charAt(0) || "U"}
-              </AvatarFallback>
-            </Avatar>
-          </div>
-
-          <div className="text-center space-y-2">
-            {editMode ? (
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
-                <input
-                  type="text"
-                  {...register("full_name")}
-                  placeholder="Full Name"
-                  className="w-full px-3 py-2 border rounded text-center"
-                  required
-                />
-                <input
-                  type="text"
-                  {...register("user_name")}
-                  placeholder="Username"
-                  className="w-full px-3 py-2 border rounded text-center"
-                  required
-                />
-                <input
-                  type="email"
-                  {...register("email")}
-                  placeholder="Email"
-                  className="w-full px-3 py-2 border rounded text-center"
-                  required
-                />
-                <div className="flex justify-center gap-2 pt-2">
-                  <Button type="submit" disabled={mutation.isPending}>
-                    {mutation.isPending ? "Saving..." : "Save"}
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => {
-                      setEditMode(false);
-                      reset();
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                </div>
-              </form>
-            ) : (
-              <>
-                <h1 className="text-2xl font-bold text-gray-900 truncate">
-                  {me?.data?.full_name}
-                </h1>
-                <div className="flex justify-center items-center gap-1 text-gray-600 text-sm flex-wrap">
-                  <User className="w-4 h-4" />
-                  <span className="truncate">@{me?.data?.user_name}</span>
-                </div>
-                <div className="flex justify-center items-center gap-1 text-gray-600 text-sm flex-wrap">
-                  <Mail className="w-4 h-4" />
-                  <span className="break-all">{me?.data?.email}</span>
-                </div>
-              </>
-            )}
-          </div>
-
-          {!editMode && (
-            <div className="mt-6 flex flex-col-12 sm:flex-row items-center justify-center gap-3 sm:gap-4 text-sm text-center">
-              <Button
-                variant="outline"
-                className="gap-2 w-36 sm:w-auto sm:min-w-[140px] justify-center"
-                onClick={() => setEditMode(true)}
-              >
-                <Pencil className="w-4 h-4" />
-                Edit Profile
-              </Button>
-
-              <Link
-                href="/create-card"
-                className="w-full sm:w-auto sm:min-w-[140px]"
-              >
-                <Button className="gap-2 w-36 bg-blue-700 justify-center">
-                  <Plus className="w-4 h-4" />
-                  Create Card
-                </Button>
-              </Link>
-            </div>
-          )}
-        </div>
+ return (
+  <div className="min-h-screen bg-gradient-to-br from-pink-100 via-purple-100 to-blue-100 py-10 px-4 sm:px-6">
+    <div className="w-full max-w-2xl mx-auto bg-white/80 shadow-lg backdrop-blur rounded-3xl overflow-hidden mb-8 border border-pink-200">
+      {/* Header Banner */}
+      <div className="relative h-36 bg-gradient-to-r from-pink-300 to-purple-400 rounded-t-3xl">
+        <img
+          src="https://i.imgur.com/MHWLac7.gif"
+          alt="Banner"
+          className="h-full w-full object-cover rounded-t-3xl"
+        />
+        <div className="absolute inset-0 bg-black/10 rounded-t-3xl" />
+        <Button
+          variant="ghost"
+          onClick={handleLogout}
+          className="absolute top-3 right-3 text-gray-800 hover:bg-red-100"
+        >
+          <LogOut className="w-5 h-5" />
+        </Button>
       </div>
 
-      <div className="w-full max-w-xl mx-auto space-y-6">
-        {me?.data?.idCard?.length === 0 && (
-          <div className="text-center text-gray-500">
-            No cards found. Create one!
+      {/* Avatar & Profile */}
+      <div className="px-6 pb-6 -mt-12 relative text-center">
+        <Avatar className="w-24 h-24 mx-auto border-4 border-white shadow-md">
+          <AvatarImage src={me?.data?.avatar} alt="@user" />
+          <AvatarFallback className="bg-pink-300 text-white font-bold text-lg">
+            {me?.data?.full_name?.charAt(0) || "U"}
+          </AvatarFallback>
+        </Avatar>
+
+        <div className="mt-4 space-y-2">
+          {editMode ? (
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
+              <input
+                {...register("full_name")}
+                placeholder="Full Name"
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none text-center bg-white"
+              />
+              <input
+                {...register("user_name")}
+                placeholder="Username"
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none text-center bg-white"
+              />
+              <input
+                {...register("email")}
+                placeholder="Email"
+                type="email"
+                className="w-full px-4 py-2 border rounded-lg focus:outline-none text-center bg-white"
+              />
+
+              <div className="flex justify-center gap-2 pt-3">
+                <Button type="submit" disabled={mutation.isPending}>
+                  {mutation.isPending ? "Saving..." : "Save"}
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setEditMode(false);
+                    reset();
+                  }}
+                >
+                  Cancel
+                </Button>
+              </div>
+            </form>
+          ) : (
+            <>
+              <h1 className="text-2xl font-bold text-gray-900">
+                {me?.data?.full_name}
+              </h1>
+              <div className="text-gray-600 flex justify-center items-center gap-1">
+                <User className="w-4 h-4" />
+                <span>@{me?.data?.user_name}</span>
+              </div>
+              <div className="text-gray-600 flex justify-center items-center gap-1">
+                <Mail className="w-4 h-4" />
+                <span>{me?.data?.email}</span>
+              </div>
+            </>
+          )}
+        </div>
+
+        {!editMode && (
+          <div className="mt-6 flex flex-col-12 sm:flex-row justify-center gap-3 text-sm">
+            <Button
+              variant="outline"
+              className="bg-pink-100 hover:bg-pink-200"
+              onClick={() => setEditMode(true)}
+            >
+              <Pencil className="w-4 h-4 mr-1" />
+              Edit Profile
+            </Button>
+            <Link href="/auth/Form-create">
+              <Button className="bg-purple-500 hover:bg-purple-600 text-white">
+                <Plus className="w-4 h-4 mr-1" />
+                Create Card
+              </Button>
+            </Link>
           </div>
         )}
+      </div>
+    </div>
 
-        {me?.data?.idCard?.map((card: CardItem, idx: number) => (
+    {/* ID Cards Section */}
+    <div className="w-full max-w-2xl mx-auto space-y-6">
+      {me?.data?.idCard?.length === 0 ? (
+        <div className="text-center text-gray-500">No cards found. Create one!</div>
+      ) : (
+        me?.data?.idCard?.map((card: CardItem, idx: number) => (
           <div
             key={idx}
-            className="hover:scale-[1.01] transition-all duration-300"
+            className="hover:scale-[1.01] transition-transform duration-300"
           >
             {card.card_type === "Corporate" && (
               <CorporateCard me={me} card={card} idx={idx} />
@@ -218,8 +207,10 @@ export default function Home() {
               <MinimalCard me={me} card={card} idx={idx} />
             )}
           </div>
-        ))}
-      </div>
+        ))
+      )}
     </div>
-  );
+  </div>
+);
+
 }

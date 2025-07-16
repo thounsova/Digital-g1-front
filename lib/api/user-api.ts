@@ -17,8 +17,21 @@ export const userRequest = () => {
     });
   };
 
+  // New method for uploading images
+  const uploadImage = async (formData: FormData) => {
+    return await axios({
+      url: "/upload/upload-image",
+      method: "POST",
+      data: formData,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+  };
+
   return {
     PROFILE,
     updateProfile,
+    uploadImage,
   };
 };
