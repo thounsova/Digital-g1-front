@@ -82,10 +82,7 @@ export default function ProfilePage() {
           </div>
         </div>
       </div>
-
-      {/* Tabs */}
-
-      {/* Cards */}
+      
       <div className="mt-2 grid grid-cols-2 gap-4 px-4 "></div>
       <Card />
     </div>
