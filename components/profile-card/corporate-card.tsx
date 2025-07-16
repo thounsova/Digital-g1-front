@@ -34,7 +34,7 @@ const CorporateCard = ({
         {/* Creative Card */}
 
         <div key={idx}>
-          <Card className="bg-gradient-to-br from-purple-800/90 to-pink-800/90 border-0 shadow-2xl backdrop-blur-sm">
+          <Card className="bg-gradient-to-br  from-purple-800/90 to-pink-800/90 border-2 border-amber-300 shadow-2xl backdrop-blur-sm">
             <Link href={`/update-card/${card.id}`}>
               <Button
                 size="sm"
@@ -181,7 +181,7 @@ const CorporateCard = ({
                     }}
                     className="w-full bg-gradient-to-r from-yellow-400 via-pink-400 to-purple-400 hover:from-yellow-500 hover:via-pink-500 hover:to-purple-500 text-white font-bold border-0 shadow-lg transform hover:scale-105 transition-transform"
                   >
-                    <Download className="w-4 h-4 mr-2" /> Save My Contact 
+                    <Download className="w-4 h-4 mr-2" /> Save My Contact
                   </Button>
                   <div className="grid grid-cols-2 gap-2">
                     <Button
