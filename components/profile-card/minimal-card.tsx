@@ -29,7 +29,7 @@ const ModernCard = ({
   return (
     <div className="max-w-sm mx-auto">
       <Card
-        className="relative shadow-lg rounded-2xl overflow-hidden transition-all duration-300 border border-white/10"
+        className="relative shadow-lg rounded-2xl overflow-hidden transition-all duration-300 border-2 border-blue-600"
         style={{
           backgroundImage: `url('https://i.pinimg.com/originals/69/e1/e9/69e1e9e87f45e37f68bdddd23990f9a5.gif')`,
           backgroundSize: "cover",
@@ -74,15 +74,31 @@ const ModernCard = ({
             </div>
 
             {/* Bio */}
- <p className="text-center text-sm text-gray-100 bg-white/10 p-4 rounded-xl border border-pink-200 shadow-inner">
-            {card.bio}
-          </p>
+            <p className="text-center text-sm text-gray-100 bg-white/10 p-4 rounded-xl border border-pink-200 shadow-inner">
+              {card.bio}
+            </p>
             {/* Contact Info */}
             <div className="grid grid-cols-2 gap-4 text-sm">
-              <InfoCard icon={<Phone size={16} />} label="Call Me" value={card.phone} />
-              <InfoCard icon={<Mail size={16} />} label="Email Me" value={me?.data?.email} />
-              <InfoCard icon={<Globe size={16} />} label="Website" value={card.web_site} />
-              <InfoCard icon={<MapPin size={16} />} label="Address" value={card.address} />
+              <InfoCard
+                icon={<Phone size={16} />}
+                label="Call Me"
+                value={card.phone}
+              />
+              <InfoCard
+                icon={<Mail size={16} />}
+                label="Email Me"
+                value={me?.data?.email}
+              />
+              <InfoCard
+                icon={<Globe size={16} />}
+                label="Website"
+                value={card.web_site}
+              />
+              <InfoCard
+                icon={<MapPin size={16} />}
+                label="Address"
+                value={card.address}
+              />
             </div>
 
             {/* Buttons */}
@@ -114,7 +130,9 @@ const ModernCard = ({
                     `TITLE:${card.job}`,
                     `TEL;TYPE=WORK,VOICE:${card.phone}`,
                     `EMAIL;TYPE=PREF,INTERNET:${me?.data.email}`,
-                    avatarBase64 ? `PHOTO;ENCODING=b;TYPE=JPEG:${avatarBase64}` : "",
+                    avatarBase64
+                      ? `PHOTO;ENCODING=b;TYPE=JPEG:${avatarBase64}`
+                      : "",
                     `URL:${card.web_site}`,
                     `ADR;TYPE=WORK:;;${card.address};;;;`,
                     `NOTE:${card.bio}`,
@@ -130,10 +148,9 @@ const ModernCard = ({
                   const url = window.URL.createObjectURL(blob);
                   const link = document.createElement("a");
                   link.href = url;
-                  link.download = `${(me?.data.full_name ?? "Unnamed_User").replace(
-                    " ",
-                    "_"
-                  )}_${idx + 1}.vcf`;
+                  link.download = `${(
+                    me?.data.full_name ?? "Unnamed_User"
+                  ).replace(" ", "_")}_${idx + 1}.vcf`;
 
                   document.body.appendChild(link);
                   link.click();

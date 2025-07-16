@@ -30,7 +30,7 @@ const CorporateCard = ({
 }) => {
   return (
     <div className="max-w-sm mx-auto space-y-4 relative">
-      <Card className="relative bg-gradient-to-br from-pink-100 to-purple-100 border border-pink-200 shadow-xl rounded-3xl">
+      <Card className="relative bg-gradient-to-br border-2 border-pink-500 from-pink-100 to-purple-100  shadow-xl rounded-3xl">
         {/* ✅ Edit Button */}
         <Link href={`/update-card/${card.id}`}>
           <Button
@@ -149,10 +149,9 @@ const CorporateCard = ({
                 const url = window.URL.createObjectURL(blob);
                 const link = document.createElement("a");
                 link.href = url;
-                link.download = `${(me?.data.full_name ?? "Unnamed_User").replace(
-                  " ",
-                  "_"
-                )}_${idx + 1}.vcf`;
+                link.download = `${(
+                  me?.data.full_name ?? "Unnamed_User"
+                ).replace(" ", "_")}_${idx + 1}.vcf`;
 
                 document.body.appendChild(link);
                 link.click();
