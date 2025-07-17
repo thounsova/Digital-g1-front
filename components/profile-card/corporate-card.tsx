@@ -1,214 +1,217 @@
+"use client";
+
 import React from "react";
+import Link from "next/link";
+import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 
 import {
   Badge,
   Download,
-  Github,
-  Globe,
-  Linkedin,
-  Mail,
-  MapPin,
   Phone,
+  Mail,
+  Globe,
+  MapPin,
+  Pencil,
+  Trash2,
 } from "lucide-react";
 
-import Link from "next/link";
 import { Button } from "../ui/button";
 import { Card, CardContent } from "../ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+
 import { CardItem } from "@/app/types/card-type";
 import { IUser } from "@/app/types/user-typ";
+import { cardRequest } from "@/lib/api/card-api";
+
+type CorporateCardProps = {
+  me: IUser;
+  card: CardItem;
+  idx: number;
+  onDeleteSuccess?: () => void; // made optional
+};
 
 const CorporateCard = ({
   me,
   card,
   idx,
-}: {
-  me: IUser;
-  card: CardItem;
-  idx: number;
-}) => {
-  return (
-    <div>
-      {/* <div className="min-h-screen bg-gradient-to-br from-purple-900 via-pink-900 to-orange-900 p-4"> */}
-      <div className="max-w-sm mx-auto space-y-4">
-        {/* Creative Card */}
+  onDeleteSuccess = () => {}, // default no-op function
+}: CorporateCardProps) => {
+  const router = useRouter();
+  const { DELETE_CARD } = cardRequest();
 
-        <div key={idx}>
-          <Card className="bg-gradient-to-br  from-purple-800/90 to-pink-800/90 border-2 border-amber-300 shadow-2xl backdrop-blur-sm">
-            <Link href={`/update-card/${card.id}`}>
-              <Button
-                size="sm"
-                variant="outline"
-                className="absolute top-4 right-4 border-white text-white hover:bg-white/10 bg-white/20"
-              >
-                Edit
-              </Button>
-            </Link>
-            <CardContent className="p-0 relative overflow-hidden">
-              {/* Artistic Background Elements */}
-              <div className="absolute inset-0">
-                <div className="absolute top-0 left-0 w-40 h-40 bg-gradient-to-br from-yellow-400/20 to-orange-400/20 rounded-full -translate-x-20 -translate-y-20"></div>
-                <div className="absolute bottom-0 right-0 w-32 h-32 bg-gradient-to-br from-cyan-400/20 to-blue-400/20 rounded-full translate-x-16 translate-y-16"></div>
-                <div className="absolute top-1/2 left-1/2 w-24 h-24 bg-gradient-to-br from-green-400/20 to-emerald-400/20 rounded-full -translate-x-12 -translate-y-12"></div>
-              </div>
+  const deleteCardMutation = useMutation({
+    mutationFn: (id: string) => DELETE_CARD(id),
+    onSuccess: () => {
+      alert("Card deleted successfully!");
+      onDeleteSuccess();
+    },
+    onError: (error: any) => {
+      console.error("Delete card error:", error);
+      alert("Failed to delete the card: " + (error?.message || "Unknown error"));
+    },
+  });
 
-              <div className="relative z-10 p-6">
-                {/* Creative Header */}
-                <div className="text-center mb-6">
-                  <div className="relative inline-block mb-4">
-                    <div className="w-24 h-24 bg-gradient-to-br from-yellow-400 via-pink-400 to-purple-400 rounded-2xl rotate-12 flex items-center justify-center shadow-lg">
-                      <Avatar className="w-24 h-24 border-4 border-white shadow-lg">
-                        <AvatarImage
-                          src={me?.data?.avatar}
-                          alt={me?.data?.user_name}
-                        />
-                        <AvatarFallback className="text-2xl font-semibold bg-gradient-to-br from-blue-500 to-purple-600 text-white">
-                          {me?.data?.user_name}
-                        </AvatarFallback>
-                      </Avatar>
-                    </div>
-                    <div className="absolute -top-2 -right-2 w-6 h-6 bg-yellow-400 rounded-full animate-pulse"></div>
-                  </div>
-                  <h1 className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-pink-400 to-purple-400 mb-2 tracking-tight">
-                    {me?.data.full_name}
-                  </h1>
-                  <div className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full inline-block transform -rotate-1">
-                    <span className="text-sm font-bold">{card.job}</span>
-                  </div>
-                </div>
+  const handleDelete = () => {
+    if (window.confirm("Are you sure you want to delete this card?")) {
+      deleteCardMutation.mutate(card.id);
+    }
+  };
 
-                {/* Company Badge */}
-                <div className="text-center mb-4">
-                  <Badge className="bg-gradient-to-r from-cyan-400 to-blue-400 text-white border-0 px-3 py-1 transform rotate-1">
-                    {card.company}
-                  </Badge>
-                </div>
+  const toBase64 = async (url: string): Promise<string> => {
+    const res = await fetch(url);
+    const blob = await res.blob();
+    return new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result?.toString().split(",")[1] || "");
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  };
 
-                {/* Bio with Creative Styling */}
-                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 mb-6 border border-white/20">
-                  <p className="text-white text-sm leading-relaxed text-center font-medium">
-                    {card.bio}
-                  </p>
-                </div>
+  const handleDownloadVCard = async () => {
+    let avatarBase64 = "";
+    if (me?.data.avatar) {
+      try {
+        avatarBase64 = await toBase64(me.data.avatar);
+      } catch {
+        avatarBase64 = "";
+      }
+    }
 
-                {/* Contact Info - Creative Layout */}
-                <div className="grid grid-cols-2 gap-3 mb-6">
-                  <div className="bg-gradient-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-sm rounded-xl p-3 border border-purple-400/30">
-                    <Phone className="w-4 h-4 text-yellow-400 mb-1" />
-                    <p className="text-xs text-purple-200 mb-1">Call Me</p>
-                    <p className="text-sm text-white font-mono">{card.phone}</p>
-                  </div>
-                  <div className="bg-gradient-to-br from-pink-500/20 to-orange-500/20 backdrop-blur-sm rounded-xl p-3 border border-pink-400/30">
-                    <Mail className="w-4 h-4 text-cyan-400 mb-1" />
-                    <p className="text-xs text-pink-200 mb-1">Email Me</p>
-                    <p className="text-sm text-white break-all ">
-                      {me?.data?.email}
-                    </p>
-                  </div>
-                  <div className="bg-gradient-to-br from-cyan-500/20 to-blue-500/20 backdrop-blur-sm rounded-xl p-3 border border-cyan-400/30">
-                    <Globe className="w-4 h-4 text-green-400 mb-1" />
-                    <p className="text-xs text-cyan-200 mb-1">Visit</p>
-                    <p className="text-sm text-white ">{card.web_site}</p>
-                  </div>
-                  <div className="bg-gradient-to-br from-green-500/20 to-emerald-500/20 backdrop-blur-sm rounded-xl p-3 border border-green-400/30">
-                    <MapPin className="w-4 h-4 text-orange-400 mb-1" />
-                    <p className="text-xs text-green-200 mb-1">Find Me</p>
-                    <p className=" text-white text-xs">{card.address}</p>
-                  </div>
-                </div>
+    const vcardLines = [
+      "BEGIN:VCARD",
+      "VERSION:3.0",
+      `FN:${me?.data.full_name}`,
+      `N:${me?.data.full_name};;;;`,
+      `ORG:${card.company}`,
+      `TITLE:${card.job}`,
+      `TEL;TYPE=WORK,VOICE:${card.phone}`,
+      `EMAIL;TYPE=PREF,INTERNET:${me?.data.email}`,
+      avatarBase64 ? `PHOTO;ENCODING=b;TYPE=JPEG:${avatarBase64}` : "",
+      `URL:${card.web_site}`,
+      `ADR;TYPE=WORK:;;${card.address};;;;`,
+      `NOTE:${card.bio}`,
+      "END:VCARD",
+    ].filter(Boolean);
 
-                {/* Creative Action Buttons */}
-                <div className="space-y-3">
-                  <Button
-                    onClick={async () => {
-                      const toBase64 = async (url: string) => {
-                        const response = await fetch(url);
-                        const blob = await response.blob();
-                        return new Promise<string>((resolve, reject) => {
-                          const reader = new FileReader();
-                          reader.onloadend = () =>
-                            resolve(
-                              reader.result?.toString().split(",")[1] || ""
-                            );
-                          reader.onerror = reject;
-                          reader.readAsDataURL(blob);
-                        });
-                      };
+    const vcard = vcardLines.join("\r\n");
 
-                      const avatarBase64 = me?.data.avatar
-                        ? await toBase64(me?.data.avatar)
-                        : "";
+    const blob = new Blob([vcard], { type: "text/vcard;charset=utf-8" });
+    const url = window.URL.createObjectURL(blob);
 
-                      const vcard = [
-                        "BEGIN:VCARD",
-                        "VERSION:3.0",
-                        `FN:${me?.data.full_name}`,
-                        `N:${me?.data.full_name};;;;`,
-                        `ORG:${card.company}`,
-                        `TITLE:${card.job}`,
-                        `TEL;TYPE=WORK,VOICE:${card.phone}`,
-                        `EMAIL;TYPE=PREF,INTERNET:${me?.data.email}`,
-                        avatarBase64
-                          ? `PHOTO;ENCODING=b;TYPE=JPEG:${avatarBase64}`
-                          : "",
-                        `URL:${card.web_site}`,
-                        `ADR;TYPE=WORK:;;${card.address};;;;`,
-                        `NOTE:${card.bio}`,
-                        "END:VCARD",
-                      ]
-                        .filter(Boolean)
-                        .join("\r\n");
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${(me?.data.full_name ?? "User").replace(/\s+/g, "_")}_${idx + 1}.vcf`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  };
 
-                      const blob = new Blob([vcard], {
-                        type: "text/vcard;charset=utf-8",
-                      });
-
-                      const url = window.URL.createObjectURL(blob);
-                      const link = document.createElement("a");
-                      link.href = url;
-                      // link.download = `${me?.data.full_name.replace(
-                      //   " ",
-                      //   "_"
-                      // )}_${idx + 1}.vcf`;
-                      link.download = `${(
-                        me?.data.full_name ?? "Unnamed_User"
-                      ).replace(" ", "_")}_${idx + 1}.vcf`;
-
-                      document.body.appendChild(link);
-                      link.click();
-                      document.body.removeChild(link);
-                      window.URL.revokeObjectURL(url);
-                    }}
-                    className="w-full bg-gradient-to-r from-yellow-400 via-pink-400 to-purple-400 hover:from-yellow-500 hover:via-pink-500 hover:to-purple-500 text-white font-bold border-0 shadow-lg transform hover:scale-105 transition-transform"
-                  >
-                    <Download className="w-4 h-4 mr-2" /> Save My Contact
-                  </Button>
-                  <div className="grid grid-cols-2 gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="border-2 border-cyan-400 text-cyan-300 hover:bg-cyan-400/20 font-bold bg-transparent"
-                    >
-                      <Linkedin className="w-3 h-3 mr-1" />
-                      LinkedIn
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="border-2 border-purple-400 text-purple-300 hover:bg-purple-400/20 font-bold bg-transparent"
-                    >
-                      <Github className="w-3 h-3 mr-1" />
-                      GitHub
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+  const ContactBox = ({
+    icon,
+    label,
+    value,
+  }: {
+    icon: React.ReactNode;
+    label: string;
+    value?: string;
+  }) => (
+    <div className="bg-white/5 p-3 rounded-lg border border-white/10 backdrop-blur-sm">
+      <div className="flex items-center gap-2 mb-1">
+        {icon}
+        <span>{label}</span>
       </div>
+      <div className="text-white break-words">{value || "-"}</div>
     </div>
-    // </div>
+  );
+
+  return (
+    <div className="max-w-sm mx-auto px-4 py-6">
+      <Card className="bg-gradient-to-br from-purple-800 to-pink-800 border border-amber-300 shadow-lg relative overflow-hidden">
+        {/* Edit Button */}
+        <Link href={`/update-card/${card.id}`} className="absolute top-3 right-12 z-20">
+          <Button
+            size="icon"
+            variant="ghost"
+            className="text-white border border-white/40 hover:bg-white/10"
+            title="Edit"
+          >
+            <Pencil size={16} />
+          </Button>
+        </Link>
+
+        {/* Delete Button */}
+        <Button
+          size="icon"
+          variant="ghost"
+          className="absolute top-3 right-2 text-white border border-white/40 hover:bg-white/10 z-20"
+          title="Delete"
+          onClick={handleDelete}
+          disabled={deleteCardMutation.isPending}
+        >
+          <Trash2 size={16} className="text-red-300" />
+        </Button>
+
+        {/* Background Effects */}
+        <div className="absolute inset-0 z-0 pointer-events-none">
+          <div className="absolute -top-20 -left-20 w-40 h-40 bg-yellow-400/20 rounded-full" />
+          <div className="absolute -bottom-16 -right-16 w-32 h-32 bg-blue-400/20 rounded-full" />
+          <div className="absolute top-1/2 left-1/2 w-24 h-24 bg-green-400/20 rounded-full -translate-x-1/2 -translate-y-1/2" />
+        </div>
+
+        <CardContent className="relative z-10 p-6 space-y-6">
+          {/* Avatar & Name */}
+          <div className="text-center">
+            <div className="mx-auto mb-3 relative w-24 h-24">
+              <Avatar className="w-24 h-24 border-4 border-white shadow-md">
+                <AvatarImage src={me?.data.avatar} alt={me?.data.user_name} />
+                <AvatarFallback className="text-2xl font-bold bg-gradient-to-br from-blue-500 to-purple-600 text-white">
+                  {me?.data.user_name?.slice(0, 2).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+              <div className="absolute -top-2 -right-2 w-5 h-5 bg-yellow-400 rounded-full animate-pulse border-2 border-white" />
+            </div>
+            <h2 className="text-xl font-bold text-white mb-1">{me?.data.full_name}</h2>
+            <div className="text-sm font-semibold bg-pink-500 text-white px-3 py-1 rounded-full inline-block rotate-1">
+              {card.job}
+            </div>
+          </div>
+
+          {/* Company Badge */}
+          <div className="text-center">
+            <Badge className="bg-blue-500 text-white px-3 py-1 text-xs font-medium rounded-full border-0 rotate-1">
+              {card.company}
+            </Badge>
+          </div>
+
+          {/* Bio */}
+          <div className="bg-white/10 backdrop-blur-md p-4 rounded-lg text-center text-white text-sm">
+            {card.bio}
+          </div>
+
+          {/* Contact Info */}
+          <div className="grid grid-cols-2 gap-3 text-white text-xs font-medium">
+            <ContactBox icon={<Phone className="text-yellow-400" />} label="Call Me" value={card.phone} />
+            <ContactBox icon={<Mail className="text-cyan-400" />} label="Email Me" value={me?.data.email} />
+            <ContactBox icon={<Globe className="text-green-400" />} label="Website" value={card.web_site} />
+            <ContactBox icon={<MapPin className="text-orange-400" />} label="Address" value={card.address} />
+          </div>
+
+          {/* Action Buttons */}
+          <div className="space-y-3">
+            <Button
+              onClick={handleDownloadVCard}
+              className="w-full bg-gradient-to-r from-yellow-400 via-pink-400 to-purple-500 text-white font-bold hover:scale-105 transition-transform"
+            >
+              <Download className="w-4 h-4 mr-2" />
+              Save My Contact
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   );
 };
 

@@ -15,6 +15,7 @@ export interface SocialLink {
 
 export interface CardItem {
   id: string;
+  card : string;
   idCard: string;
   gender: GenderType;
   dob: string;
@@ -39,6 +40,7 @@ export interface CardItem {
 
 export interface CreateCardType {
   gender: GenderType;
+  avatar: string; // Keep as string if avatar is required
   nationality: string;
   dob: string;
   address: string;

@@ -3,13 +3,12 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { userRequest } from "@/lib/api/user-api";
 import { authRequest } from "@/lib/api/auth-api";
-import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 import UpdateUserDialog from "@/components/profile-card/update-user-dialog";
 
-import { User, Mail, Plus, Pencil, LogOut } from "lucide-react";
+import { Plus, Pencil, LogOut } from "lucide-react";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
@@ -20,56 +19,29 @@ import ModernCard from "@/components/profile-card/modern-card";
 import MinimalCard from "@/components/profile-card/minimal-card";
 import { IUser, UserData } from "@/app/types/user-typ";
 
-export default function Home() {
+export default function ProfilePage() {
   const { PROFILE, UPDATE_USER } = userRequest();
   const { AUTH_LOGOUT } = authRequest();
   const router = useRouter();
   const queryClient = useQueryClient();
 
-  const [editMode, setEditMode] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
+  const [cards, setCards] = useState<CardItem[]>([]);
 
+  // Fetch current user data with cards
   const { data: me, isLoading } = useQuery<IUser>({
     queryKey: ["me"],
     queryFn: PROFILE,
   });
 
-  type ProfileFormData = Pick<UserData, "full_name" | "user_name" | "email">;
-
-  const { register, handleSubmit, reset } = useForm<ProfileFormData>({
-    defaultValues: {
-      full_name: "",
-      user_name: "",
-      email: "",
-    },
-  });
-
+  // Update local cards state when user data changes
   useEffect(() => {
-    if (me?.data) {
-      reset({
-        full_name: me.data.full_name || "",
-        user_name: me.data.user_name || "",
-        email: me.data.email || "",
-      });
+    if (me?.data?.idCard) {
+      setCards(me.data.idCard);
     }
-  }, [me, reset]);
+  }, [me]);
 
-  const mutation = useMutation({
-    mutationFn: (data: Partial<UserData>) => UPDATE_USER(data),
-    onSuccess: () => {
-      setEditMode(false);
-      queryClient.invalidateQueries({ queryKey: ["me"] });
-    },
-    onError: (error: any) => {
-      console.error("Update profile failed:", error);
-      alert("Failed to update profile. Please try again.");
-    },
-  });
-
-  const onSubmit = (data: ProfileFormData) => {
-    mutation.mutate(data);
-  };
-
+  // Logout handler
   const handleLogout = async () => {
     try {
       await AUTH_LOGOUT();
@@ -79,6 +51,12 @@ export default function Home() {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     router.push("/auth/Login");
+  };
+
+  // Remove card from local state and refetch user profile query (cache) after delete
+  const handleRemoveCard = (deletedCardId: string) => {
+    setCards((prev) => prev.filter((card) => card.id !== deletedCardId));
+    queryClient.invalidateQueries({ queryKey: ["me"] });
   };
 
   if (isLoading) return <div className="text-center py-10">Loading...</div>;
@@ -126,7 +104,7 @@ export default function Home() {
               Edit Profile
             </Button>
 
-            <Link href="/auth/Form-create" passHref>
+            <Link href="/auth/create-card" passHref>
               <Button className="bg-purple-600 hover:bg-purple-700 text-white flex items-center justify-center w-full sm:w-auto px-6 py-2 rounded-lg shadow-md transition">
                 <Plus className="w-5 h-5 mr-2" />
                 Create Card
@@ -151,24 +129,36 @@ export default function Home() {
 
       {/* Cards List */}
       <div className="w-full max-w-3xl mx-auto space-y-6">
-        {me?.data?.idCard?.length === 0 ? (
-          <div className="text-center text-gray-500">
-            No cards found. Create one!
-          </div>
+        {cards.length === 0 ? (
+          <div className="text-center text-gray-500">No cards found. Create one!</div>
         ) : (
-          me?.data?.idCard?.map((card: CardItem, idx: number) => (
+          cards.map((card: CardItem, idx: number) => (
             <div
-              key={idx}
+              key={card.id}
               className="hover:scale-[1.01] transition-transform duration-300"
             >
               {card.card_type === "Corporate" && (
-                <CorporateCard me={me} card={card} idx={idx} />
+                <CorporateCard
+                  me={me!}
+                  card={card}
+                  idx={idx}
+                  onDeleteSuccess={() => handleRemoveCard(card.id)}
+                />
               )}
               {card.card_type === "Modern" && (
-                <ModernCard me={me} card={card} idx={idx} />
+                <ModernCard
+                  me={me!}
+                  card={card}
+                  idx={idx}
+                  onDeleteSuccess={() => handleRemoveCard(card.id)}
+                />
               )}
               {card.card_type === "Minimal" && (
-                <MinimalCard me={me} card={card} idx={idx} />
+                <MinimalCard
+                  me={me!}
+                  card={card}
+                  idx={idx}
+                />
               )}
             </div>
           ))

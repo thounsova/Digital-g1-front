@@ -2,6 +2,7 @@ import { CardItem } from "./card-type";
 
 export interface IUser {
   message: string;
+   me?: IUser;
   data: UserData;
   avatar?: string;
   isLoading?: string;

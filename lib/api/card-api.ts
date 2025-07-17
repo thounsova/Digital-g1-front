@@ -16,6 +16,7 @@ export const cardRequest = () => {
       data: payload,
     });
   };
+
   const UPDATE_CARD = async (
     id: string,
     payload: CreateCardType
@@ -26,9 +27,18 @@ export const cardRequest = () => {
       data: payload,
     });
   };
+
+  const DELETE_CARD = async (id: string): Promise<{ message: string }> => {
+    return await request({
+      url: `/card/delete-card/${id}`,
+      method: "DELETE",
+    });
+  };
+
   return {
-    UPDATE_CARD,
     GET_CARD,
     CREATE_CARD,
+    UPDATE_CARD,
+    DELETE_CARD,
   };
 };
