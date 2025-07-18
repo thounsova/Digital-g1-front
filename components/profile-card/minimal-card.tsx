@@ -1,62 +1,92 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
+import Link from "next/link";
+import { useMutation } from "@tanstack/react-query";
 import {
+  Badge,
   Download,
-  Github,
-  Globe,
-  Linkedin,
-  Mail,
-  MapPin,
   Phone,
+  Mail,
+  Globe,
+  MapPin,
   Pencil,
   Trash2,
 } from "lucide-react";
-import Link from "next/link";
+
 import { Button } from "../ui/button";
 import { Card, CardContent } from "../ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { CardItem } from "@/app/types/card-type";
-import { IUser } from "@/app/types/user-typ";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { cardRequest } from "@/lib/api/card-api";
+import {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 
-const ModernCard = ({
-  me,
-  card,
-  idx,
-}: {
+import { CardItem } from "@/app/types/card-type";
+import { IUser } from "@/app/types/user-typ";
+import { cardRequest } from "@/lib/api/card-api";
+
+type CorporateCardProps = {
   me: IUser;
   card: CardItem;
   idx: number;
-}) => {
-  const queryClient = useQueryClient();
-  const { DELETE_CARD } = cardRequest();
+  onDeleteSuccess?: () => void;
+};
 
-  const { mutate: deleteCard, isPending: isDeleting } = useMutation({
+const CorporateCard = ({
+  me,
+  card,
+  idx,
+  onDeleteSuccess = () => {},
+}: CorporateCardProps) => {
+  const { DELETE_CARD } = cardRequest();
+  const [open, setOpen] = useState(false);
+
+  const deleteCardMutation = useMutation({
     mutationFn: (id: string) => DELETE_CARD(id),
     onSuccess: () => {
-      toast.success("✅ Card deleted successfully!");
-      queryClient.invalidateQueries({ queryKey: ["cards"] });
+      toast.success("លុបបានជោគជ័យ! / Card deleted successfully.");
+      onDeleteSuccess();
+      setOpen(false);
     },
-    onError: () => {
-      toast.error("❌ Failed to delete card.");
+    onError: (error: any) => {
+      toast.error("បរាជ័យក្នុងការលុប! / Failed to delete.", {
+        description: error?.message || "Unknown error.",
+      });
     },
   });
 
-  const handleDelete = () => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this card?");
-    if (confirmDelete) {
-      deleteCard(card.id);
-    }
-  };
+  const InfoBox = ({
+    icon,
+    label,
+    value,
+  }: {
+    icon: React.ReactNode;
+    label: string;
+    value: string;
+  }) => (
+    <div className="bg-white p-4 rounded-xl border border-blue-200 shadow-md text-sm flex flex-col">
+      <div className="flex items-center gap-2 text-indigo-700 mb-1 font-semibold">
+        {icon}
+        <span>{label}</span>
+      </div>
+      <p className="text-gray-900 break-words">{value}</p>
+    </div>
+  );
 
   const handleDownloadVCard = async () => {
-    const toBase64 = async (url: string) => {
+    const toBase64 = async (url: string): Promise<string> => {
       const res = await fetch(url);
       const blob = await res.blob();
-      return new Promise<string>((resolve, reject) => {
+      return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onloadend = () =>
           resolve(reader.result?.toString().split(",")[1] || "");
@@ -65,9 +95,12 @@ const ModernCard = ({
       });
     };
 
-    const avatarBase64 = me?.data.avatar
-      ? await toBase64(me?.data.avatar)
-      : "";
+    let avatarBase64 = "";
+    if (me?.data.avatar) {
+      try {
+        avatarBase64 = await toBase64(me.data.avatar);
+      } catch {}
+    }
 
     const vcard = [
       "BEGIN:VCARD",
@@ -78,9 +111,7 @@ const ModernCard = ({
       `TITLE:${card.job}`,
       `TEL;TYPE=WORK,VOICE:${card.phone}`,
       `EMAIL;TYPE=PREF,INTERNET:${me?.data.email}`,
-      avatarBase64
-        ? `PHOTO;ENCODING=b;TYPE=JPEG:${avatarBase64}`
-        : "",
+      avatarBase64 ? `PHOTO;ENCODING=b;TYPE=JPEG:${avatarBase64}` : "",
       `URL:${card.web_site}`,
       `ADR;TYPE=WORK:;;${card.address};;;;`,
       `NOTE:${card.bio}`,
@@ -89,152 +120,170 @@ const ModernCard = ({
       .filter(Boolean)
       .join("\r\n");
 
-    const blob = new Blob([vcard], {
-      type: "text/vcard;charset=utf-8",
-    });
-
-    const url = window.URL.createObjectURL(blob);
+    const blob = new Blob([vcard], { type: "text/vcard;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `${(me?.data.full_name ?? "User")
-      .replace(" ", "_")}_${idx + 1}.vcf`;
+    link.download = `${me?.data.full_name?.replace(/\s+/g, "_")}_${
+      idx + 1
+    }.vcf`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    window.URL.revokeObjectURL(url);
+    URL.revokeObjectURL(url);
+
+    toast.success("🎉 vCard បានទាញយក!", {
+      description: "ទំនាក់ទំនងត្រូវបានរក្សាទុក",
+      className: "bg-cyan-100 text-cyan-800 border border-cyan-300",
+      duration: 4000,
+    });
   };
 
   return (
-    <div className="max-w-sm mx-auto px-4">
-      <Card
-        className="relative shadow-lg rounded-2xl overflow-hidden border-2 border-blue-600"
-        style={{
-          backgroundImage: `url('https://i.pinimg.com/originals/69/e1/e9/69e1e9e87f45e37f68bdddd23990f9a5.gif')`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      >
-        <div className="absolute inset-0 bg-black/60 rounded-2xl pointer-events-none" />
+    <div className="max-w-sm mx-auto relative">
+      <Card className="relative bg-gradient-to-br border-2 border-blue-400 from-blue-50 to-indigo-50 shadow-lg rounded-3xl overflow-hidden">
+        {/* Edit Button */}
+        <Link
+          href={`/update-card/${card.id}`}
+          className="absolute top-3 right-3 z-20"
+          aria-label="Edit card"
+        >
+          <Button
+            size="icon"
+            variant="outline"
+            title="Edit"
+            className="text-blue-600 border-blue-400 bg-white hover:bg-blue-100"
+          >
+            <Pencil size={16} />
+          </Button>
+        </Link>
 
-        <div className="relative z-10">
-          <div className="absolute top-3 right-3 z-20 flex gap-2">
-            <Link href={`/update-card/${card.id}`}>
-              <Button
-                size="icon"
-                variant="outline"
-                className="border-white/40 text-amber-400 hover:bg-cyan-300"
-                aria-label="Edit"
-              >
-                <Pencil size={16} />
-              </Button>
-            </Link>
-
+        {/* Delete Button with AlertDialog */}
+        <AlertDialog open={open} onOpenChange={setOpen}>
+          <AlertDialogTrigger asChild>
             <Button
               size="icon"
-              variant="outline"
-              className="border-white/40 text-red-500 hover:bg-red-600/40"
-              onClick={handleDelete}
-              disabled={isDeleting}
-              aria-label="Delete"
+              variant="ghost"
+              className=" bg-white border-1 border-blue-400 hover:bg-blue-100  absolute
+              top-3
+              left-3
+              z-20 "
+              title="Delete"
             >
-              {isDeleting ? (
-                <span className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full" />
-              ) : (
-                <Trash2 size={16} />
-              )}
+              <Trash2 size={16} className="text-blue-400" />
             </Button>
-          </div>
+          </AlertDialogTrigger>
 
-          <CardContent className="p-6 space-y-6 text-white">
-            {/* Avatar & Name */}
-            <div className="flex flex-col items-center text-center space-y-2">
-              <Avatar className="w-24 h-24 border-4 border-yellow-500 shadow-lg">
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>បញ្ចាក់ / Confirm Deletion</AlertDialogTitle>
+              <AlertDialogDescription className="text-sm">
+                តើអ្នកពិតជាចង់លុបកាតនេះមែនទេ? វានឹងបាត់ទៅជាអចិន្ត្រៃយ៍។
+                <br />
+                Are you sure you want to delete this card? This action cannot be
+                undone.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>បោះបង់ / Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                disabled={deleteCardMutation.isPending}
+                onClick={() => deleteCardMutation.mutate(card.id)}
+              >
+                លុបចោល / Delete
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
+        <CardContent className="p-8 space-y-8">
+          {/* Avatar, Name, Job */}
+          <div className="flex flex-col items-center gap-4">
+            <div className="relative w-28 h-28 rounded-3xl bg-gradient-to-br from-blue-400 via-indigo-500 to-purple-600 rotate-12 flex items-center justify-center shadow-md">
+              <Avatar className="w-28 h-28 border-4 border-white shadow-md rotate-[-12deg]">
                 <AvatarImage src={me?.data?.avatar} alt={me?.data?.user_name} />
-                <AvatarFallback className="bg-slate-700 text-white text-2xl font-semibold">
+                <AvatarFallback className="text-3xl font-semibold bg-gradient-to-br from-indigo-600 to-purple-700 text-white">
                   {me?.data?.user_name?.slice(0, 2).toUpperCase()}
                 </AvatarFallback>
               </Avatar>
-              <h2 className="text-xl font-bold">{me?.data.full_name}</h2>
-              <span className="text-sm bg-indigo-600 bg-opacity-70 px-3 py-1 rounded-full font-medium">
-                {card.job}
-              </span>
             </div>
-
-            {/* Company */}
-            <div className="text-center">
-              <span className="inline-block text-xs font-semibold bg-cyan-700 bg-opacity-60 px-3 py-1 rounded-full">
-                {card.company}
-              </span>
-            </div>
-
-            {/* Bio */}
-            <p className="text-center text-sm bg-white/10 p-4 rounded-xl border border-pink-200">
-              {card.bio}
+            <h1 className="text-3xl font-extrabold text-indigo-700 text-center">
+              {me?.data.full_name}
+            </h1>
+            <p className="text-sm text-white bg-indigo-500/90 px-6 py-2 rounded-full font-semibold tracking-wide text-center max-w-xs">
+              {card.job}
             </p>
+          </div>
 
-            {/* Contact Info */}
-            <div className="grid grid-cols-2 gap-4">
-              <InfoCard icon={<Phone size={16} />} label="Call Me" value={card.phone} />
-              <InfoCard icon={<Mail size={16} />} label="Email Me" value={me?.data?.email} />
-              <InfoCard icon={<Globe size={16} />} label="Website" value={card.web_site} />
-              <InfoCard icon={<MapPin size={16} />} label="Address" value={card.address} />
+          {/* Company */}
+          <div className="flex justify-center">
+            <Badge className="bg-indigo-200 text-indigo-900 border-0 px-4 py-2 rounded-full text-sm shadow-sm">
+              {card.company}
+            </Badge>
+          </div>
+
+          {/* Bio */}
+          <p className="text-center text-sm text-gray-900 bg-white p-5 rounded-xl border border-blue-200 shadow-inner leading-relaxed">
+            {card.bio}
+          </p>
+
+          {/* Contact Info */}
+          <div className="grid grid-cols-2 gap-5">
+            <InfoBox
+              icon={<Phone className="text-indigo-600" />}
+              label="Phone"
+              value={card.phone}
+            />
+            <InfoBox
+              icon={<Mail className="text-indigo-600" />}
+              label="Email"
+              value={me?.data?.email}
+            />
+            <InfoBox
+              icon={<Globe className="text-indigo-600" />}
+              label="Website"
+              value={card.web_site}
+            />
+            <InfoBox
+              icon={<MapPin className="text-indigo-600" />}
+              label="Address"
+              value={card.address}
+            />
+          </div>
+
+          {/* Download vCard */}
+          <Button
+            onClick={handleDownloadVCard}
+            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold"
+          >
+            <Download className="w-4 h-4 mr-2" />
+            រក្សាទុកទំនាក់ទំនង
+          </Button>
+
+          {/* Social Links */}
+          {card.socialLinks?.map((res, idx) => (
+            <div key={idx}>
+              <Link href={res.url} target="_blank" rel="noopener noreferrer">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="border-indigo-600 text-indigo-700 hover:bg-indigo-100 bg-transparent w-full"
+                >
+                  <Avatar className="w-6 h-6 mr-2">
+                    <AvatarImage src={res.icon} alt={res.platform} />
+                    <AvatarFallback className="text-2xl font-semibold bg-gradient-to-br from-indigo-600 to-purple-700 text-white">
+                      {res.platform}
+                    </AvatarFallback>
+                  </Avatar>
+                  {res.platform}
+                </Button>
+              </Link>
             </div>
-
-            {/* Actions */}
-            <div className="space-y-3">
-              <Button
-                onClick={handleDownloadVCard}
-                className="w-full bg-amber-600 hover:bg-amber-700 text-white font-serif"
-              >
-                <Download className="w-4 h-4 mr-2" />
-                Add to Address Book
-              </Button>
-
-              {card.socialLinks?.length > 0 && (
-                <div className="space-y-2">
-                  {card.socialLinks.map((res, index) => (
-                    <Link key={index} href={res.url || "#"} target="_blank">
-                      <Button
-                        variant="outline"
-                        className="w-full border-amber-600 text-gray-950 hover:bg-amber-600/20 font-serif"
-                      >
-                        <Avatar className="w-6 h-6 mr-2">
-                          <AvatarImage src={res.icon} alt={res.platform} />
-                          <AvatarFallback className="bg-blue-500 text-white">
-                            {res.platform.slice(0, 2)}
-                          </AvatarFallback>
-                        </Avatar>
-                        {res.platform}
-                      </Button>
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
-          </CardContent>
-        </div>
+          ))}
+        </CardContent>
       </Card>
     </div>
   );
 };
 
-// Reusable Info Card
-const InfoCard = ({
-  icon,
-  label,
-  value,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  value: string;
-}) => (
-  <div className="bg-white/10 p-3 rounded-lg border border-white/20">
-    <div className="flex items-center space-x-2 mb-1 text-white/90">
-      {icon}
-      <span className="text-xs font-medium">{label}</span>
-    </div>
-    <p className="text-sm break-words">{value || "-"}</p>
-  </div>
-);
-
-export default ModernCard;
+export default CorporateCard;

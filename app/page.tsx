@@ -75,7 +75,7 @@ export default function ProfilePage() {
           <Button
             variant="ghost"
             onClick={handleLogout}
-            className="absolute top-3 right-3 text-pink-300 hover:bg-red-100"
+            className="absolute top-3 right-3 border border-white/40  text-white hover:bg-red-100"
           >
             <LogOut className="w-5 h-5" />
           </Button>
@@ -130,7 +130,9 @@ export default function ProfilePage() {
       {/* Cards List */}
       <div className="w-full max-w-3xl mx-auto space-y-6">
         {cards.length === 0 ? (
-          <div className="text-center text-gray-500">No cards found. Create one!</div>
+          <div className="text-center text-gray-500">
+            No cards found. Create one!
+          </div>
         ) : (
           cards.map((card: CardItem, idx: number) => (
             <div
@@ -158,6 +160,7 @@ export default function ProfilePage() {
                   me={me!}
                   card={card}
                   idx={idx}
+                  onDeleteSuccess={() => handleRemoveCard(card.id)}
                 />
               )}
             </div>
