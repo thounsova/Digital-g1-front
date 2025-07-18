@@ -293,13 +293,6 @@ Props) {
             {/* Actions */}
             <div className="flex justify-end gap-2 pt-4">
               <Button
-                type="button"
-                variant="ghost"
-                onClick={() => setOpen(false)}
-              >
-                Cancel
-              </Button>
-              <Button
                 type="submit"
                 className="w-full"
                 disabled={isSubmitting || updateUserProfileMutation.isPending}

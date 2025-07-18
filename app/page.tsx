@@ -95,17 +95,17 @@ export default function ProfilePage() {
           </h2>
           <p className="text-sm text-gray-600">{me?.data?.email}</p>
 
-          <div className="mt-6 flex flex-col sm:flex-row justify-center gap-4 max-w-xs mx-auto">
+          <div className="mt-6 flex flex-col-12 sm:flex-row justify-center gap-4 max-w-xs mx-auto">
             <Button
               onClick={() => setOpenDialog(true)}
-              className="bg-pink-600 hover:bg-pink-700 text-white flex items-center justify-center w-full sm:w-auto px-6 py-2 rounded-lg shadow-md transition"
+              className="bg-pink-600 hover:bg-pink-700 text-white flex items-center justify-center w-40 sm:w-auto px-6 py-2 rounded-lg shadow-md transition"
             >
               <Pencil className="w-5 h-5 mr-2" />
               Edit Profile
             </Button>
 
             <Link href="/auth/create-card" passHref>
-              <Button className="bg-purple-600 hover:bg-purple-700 text-white flex items-center justify-center w-full sm:w-auto px-6 py-2 rounded-lg shadow-md transition">
+              <Button className="bg-purple-600 hover:bg-purple-700 text-white flex items-center justify-center w-40 sm:w-auto px-6 py-2 rounded-lg shadow-md transition">
                 <Plus className="w-5 h-5 mr-2" />
                 Create Card
               </Button>
