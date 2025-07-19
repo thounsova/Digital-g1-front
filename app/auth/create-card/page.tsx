@@ -1,355 +1,544 @@
 "use client";
+
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm, useFieldArray } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+
 import {
-  Form, FormField, FormItem, FormLabel,
-  FormControl, FormMessage
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
-  Select, SelectTrigger, SelectValue,
-  SelectContent, SelectItem
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
 } from "@/components/ui/select";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Trash2, Plus } from "lucide-react";
-import { cardRequest } from "@/lib/api/card-api";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
 import { useMutation } from "@tanstack/react-query";
+
+import { cardRequest } from "@/lib/api/card-api";
 import { CreateCardType } from "@/app/types/card-type";
 
 const formSchema = z.object({
   gender: z.enum(["male", "female"]),
-  nationality: z.string().min(1),
-  dob: z.string().refine((val) => !isNaN(Date.parse(val)), {
-    message: "Invalid date",
-  }),
-  bio: z.string().min(1),
-  web_site: z.string().min(1),
-  job: z.string().min(1),
-  address: z.string().min(1),
-  company: z.string().min(1),
-  phone: z.string().min(1),
+  nationality: z.string().min(1, "Nationality is required"),
+  dob: z.string().min(1, "Date of birth is required"),
+  address: z.string().min(1, "Address is required"),
+  phone: z.string().min(1, "Phone is required"),
+  bio: z.string().min(1, "Bio is required"),
+  web_site: z.string().url().optional().or(z.literal("")),
+  job: z.string().optional(),
+  company: z.string().optional(),
   card_type: z.enum(["Modern", "Minimal", "Corporate"]),
-  social: z.array(z.object({
-    platform: z.string().min(1),
-    icon: z.string().optional(),
-    url: z.string().url(),
-  })),
+  social: z.array(
+    z.object({
+      platform: z.string().min(1, "Platform is required"),
+      icon: z.string().optional(),
+      url: z.string().url("Invalid URL"),
+    })
+  ),
 });
 
-type ProfileFormType = z.infer<typeof formSchema>;
+type FormValues = z.infer<typeof formSchema>;
 
-export default function ProfileForm() {
-  const [avatarFile, setAvatarFile] = useState<File | null>(null);
-  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
-  const [socialIcons, setSocialIcons] = useState<Record<number, File | null>>({});
-  const [iconPreviews, setIconPreviews] = useState<Record<number, string>>({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
+export default function CreateCardForm() {
   const router = useRouter();
+
   const { CREATE_CARD } = cardRequest();
 
-  const form = useForm<ProfileFormType>({
+  const createCardMutation = useMutation({
+    mutationFn: (payload: CreateCardType) => CREATE_CARD(payload),
+    onSuccess: () => {
+      router.push("/");
+    },
+  });
+
+  const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       gender: "male",
-      nationality: "Cambodian",
+      nationality: "",
       dob: "",
       address: "",
       phone: "",
-      card_type: "Minimal",
-      web_site: "",
       bio: "",
-      company: "",
+      web_site: "",
       job: "",
+      company: "",
+      card_type: "Minimal",
       social: [{ platform: "", icon: "", url: "" }],
     },
   });
 
-  const { control, handleSubmit } = form;
+  const { control, handleSubmit, watch } = form;
   const { fields, append, remove } = useFieldArray({
     control,
     name: "social",
   });
 
+  const [socialIcons, setSocialIcons] = useState<Record<number, File | null>>({});
+  const [iconPreviews, setIconPreviews] = useState<Record<number, string>>({});
+
   const isValidImage = (file: File) => {
-    const allowed = ["image/png", "image/jpeg", "image/jpg", "image/webp"];
-    return allowed.includes(file.type) && file.size <= 2 * 1024 * 1024;
+    const allowedTypes = ["image/png", "image/jpeg", "image/jpg", "image/webp"];
+    const maxSize = 2 * 1024 * 1024; // 2MB
+    return allowedTypes.includes(file.type) && file.size <= maxSize;
   };
 
-  const createCardMutation = useMutation({
-    mutationFn: (payload: CreateCardType) => CREATE_CARD(payload),
-    onSuccess: () => {
-      form.reset();
-      setAvatarFile(null);
-      setAvatarPreview(null);
-      setSocialIcons({});
-      setIconPreviews({});
-      router.push("/");
-    },
-  });
+  const uploadIcon = async (file: File): Promise<string> => {
+    const formData = new FormData();
+    formData.append("image", file);
 
-  const onSubmit = async (values: ProfileFormType) => {
-    setIsSubmitting(true);
-    let avatarUrl = avatarPreview ?? "";
+    const res = await fetch("http://localhost:8000/api/v1/upload/upload-image", {
+      method: "POST",
+      body: formData,
+    });
 
-    if (avatarFile) {
-      const formData = new FormData();
-      formData.append("image", avatarFile);
-      const res = await fetch("http://localhost:8000/api/v1/upload/upload-image", {
-        method: "POST",
-        body: formData,
-      });
-      const data = await res.json();
-      avatarUrl = data.url;
+    if (!res.ok) {
+      throw new Error("Image upload failed");
     }
 
-    const updatedSocial = await Promise.all(
-      values.social.map(async (item, index) => {
-        const file = socialIcons[index];
-        if (file) {
-          const formData = new FormData();
-          formData.append("image", file);
-          const res = await fetch("http://localhost:8000/api/v1/upload/upload-image", {
-            method: "POST",
-            body: formData,
-          });
-          const data = await res.json();
-          return { ...item, icon: data.url };
-        }
-        return { ...item, icon: iconPreviews[index] || "" };
-      })
-    );
+    const data = await res.json();
+    return data.url;
+  };
 
-    const finalPayload: CreateCardType = {
-      ...values,
-      avatar: avatarUrl,
-      social: updatedSocial,
-    };
+  const onSubmit = async (values: FormValues) => {
+    try {
+      // Prepare payload
+      const payload: CreateCardType = {
+        gender: values.gender,
+        nationality: values.nationality.trim(),
+        dob: values.dob,
+        address: values.address.trim(),
+        phone: values.phone.trim(),
+        bio: values.bio.trim(),
+        web_site: values.web_site?.trim(),
+        job: values.job?.trim(),
+        company: values.company?.trim(),
+        card_type: values.card_type,
+        social: [],
+        avatar: "", // Or set if you have avatar upload logic here
+      };
 
-    createCardMutation.mutate(finalPayload);
-    setIsSubmitting(false);
+      // Upload icons and build social links
+      payload.social = await Promise.all(
+        values.social.map(async (item, idx) => {
+          const file = socialIcons[idx];
+          if (file) {
+            const iconUrl = await uploadIcon(file);
+            return {
+              platform: item.platform.trim(),
+              url: item.url.trim(),
+              icon: iconUrl,
+            };
+          }
+          return {
+            platform: item.platform.trim(),
+            url: item.url.trim(),
+            icon: "",
+          };
+        })
+      );
+
+      createCardMutation.mutate(payload);
+    } catch (err) {
+      alert("Failed to upload images");
+    }
   };
 
   return (
-    <div className="min-h-screen p-4">
-      <div className="max-w-xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-pink-100 via-purple-100 to-blue-100 p-6">
+      <div className="max-w-3xl mx-auto bg-white p-8 rounded-2xl shadow-lg border border-pink-300">
+        <h1 className="text-3xl font-extrabold mb-8 text-center text-pink-600 tracking-wide">
+          Create Your Card
+        </h1>
+
         <Form {...form}>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            {/* Avatar Upload */}
-            <div className="flex flex-col items-center space-y-2">
-              <label htmlFor="avatarUpload" className="cursor-pointer relative">
-                <div className="w-24 h-24 rounded-full overflow-hidden border bg-gray-100">
-                  {avatarPreview ? (
-                    <img src={avatarPreview} alt="Avatar" className="w-full h-full object-cover" />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-gray-400">+ Avatar</div>
-                  )}
-                </div>
-                {avatarPreview && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setAvatarFile(null);
-                      setAvatarPreview(null);
-                    }}
-                    className="absolute -top-2 -right-2 bg-white text-red-500 rounded-full w-5 h-5 flex items-center justify-center text-xs shadow"
-                  >
-                    ✕
-                  </button>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-8" noValidate>
+            {/* Card Type & Gender */}
+            <div className="grid grid-cols-2 gap-6">
+              <FormField
+                control={control}
+                name="card_type"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel className="text-sm font-semibold text-pink-700">
+                      Card Type
+                    </FormLabel>
+                    <FormControl>
+                      <Select
+                        value={field.value}
+                        onValueChange={field.onChange}
+                      >
+                        <SelectTrigger className="w-full py-2 px-3 rounded-lg border border-pink-300 text-pink-800 shadow-sm bg-pink-50 hover:bg-pink-100 focus:ring-2 focus:ring-pink-400">
+                          <SelectValue placeholder="Select Card Type" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Modern">Modern</SelectItem>
+                          <SelectItem value="Minimal">Minimal</SelectItem>
+                          <SelectItem value="Corporate">Corporate</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage className="text-xs text-red-500 mt-1" />
+                  </FormItem>
                 )}
-              </label>
-              <Input
-                id="avatarUpload"
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file && isValidImage(file)) {
-                    setAvatarFile(file);
-                    setAvatarPreview(URL.createObjectURL(file));
-                  } else {
-                    alert("Avatar must be an image under 2MB");
-                  }
-                }}
+              />
+
+              <FormField
+                control={control}
+                name="gender"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel className="text-sm font-semibold text-pink-700">
+                      Gender
+                    </FormLabel>
+                    <FormControl>
+                      <Select
+                        value={field.value}
+                        onValueChange={field.onChange}
+                      >
+                        <SelectTrigger className="w-full py-2 px-3 rounded-lg border border-pink-300 text-pink-800 shadow-sm bg-pink-50 hover:bg-pink-100 focus:ring-2 focus:ring-pink-400">
+                          <SelectValue placeholder="Select Gender" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="male">Male</SelectItem>
+                          <SelectItem value="female">Female</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage className="text-xs text-red-500 mt-1" />
+                  </FormItem>
+                )}
               />
             </div>
 
-            {/* Form Fields */}
-            {([
-              ["gender", "Gender"],
-              ["nationality", "Nationality"],
-              ["dob", "Date of Birth"],
-              ["job", "Job"],
-              ["company", "Company"],
-              ["web_site", "Website"],
-              ["bio", "Bio"],
-              ["address", "Address"],
-              ["phone", "Phone"]
-            ] as const).map(([name, label]) => {
-              if (name === "gender") {
-                return (
-                  <FormField
-                    key={name}
-                    control={control}
-                    name={name}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{label}</FormLabel>
-                        <Select onValueChange={field.onChange} value={field.value}>
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select Gender" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value="male">Male</SelectItem>
-                            <SelectItem value="female">Female</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                );
-              }
+            {/* Nationality & DOB */}
+            <div className="grid grid-cols-2 gap-6">
+              <FormField
+                control={control}
+                name="nationality"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel className="text-sm font-semibold text-pink-700">
+                      Nationality
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        placeholder="e.g. American"
+                        className="rounded-lg border border-pink-300 shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-pink-400"
+                      />
+                    </FormControl>
+                    <FormMessage className="text-xs text-red-500 mt-1" />
+                  </FormItem>
+                )}
+              />
 
-              return (
-                <FormField
-                  key={name}
-                  control={control}
-                  name={name}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{label}</FormLabel>
-                      <FormControl>
-                        <Input {...field} placeholder={label} type={name === "dob" ? "date" : "text"} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              );
-            })}
+              <FormField
+                control={control}
+                name="dob"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel className="text-sm font-semibold text-pink-700">
+                      Date of Birth
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="date"
+                        {...field}
+                        className="rounded-lg border border-pink-300 shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-pink-400"
+                      />
+                    </FormControl>
+                    <FormMessage className="text-xs text-red-500 mt-1" />
+                  </FormItem>
+                )}
+              />
+            </div>
 
-            {/* Card Type */}
+            {/* Address & Phone */}
+            <div className="grid grid-cols-2 gap-6">
+              <FormField
+                control={control}
+                name="address"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel className="text-sm font-semibold text-pink-700">
+                      Address
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        placeholder="Your address"
+                        className="rounded-lg border border-pink-300 shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-pink-400"
+                      />
+                    </FormControl>
+                    <FormMessage className="text-xs text-red-500 mt-1" />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={control}
+                name="phone"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel className="text-sm font-semibold text-pink-700">
+                      Phone
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        placeholder="+1 123 456 7890"
+                        className="rounded-lg border border-pink-300 shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-pink-400"
+                      />
+                    </FormControl>
+                    <FormMessage className="text-xs text-red-500 mt-1" />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            {/* Bio */}
             <FormField
               control={control}
-              name="card_type"
+              name="bio"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Card Type</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
+                <FormItem className="flex flex-col">
+                  <FormLabel className="text-sm font-semibold text-pink-700">
+                    Bio
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      placeholder="Tell us about yourself"
+                      className="rounded-lg border border-pink-300 shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-pink-400"
+                    />
+                  </FormControl>
+                  <FormMessage className="text-xs text-red-500 mt-1" />
+                </FormItem>
+              )}
+            />
+
+            {/* Job & Company */}
+            <div className="grid grid-cols-2 gap-6">
+              <FormField
+                control={control}
+                name="job"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel className="text-sm font-semibold text-pink-700">
+                      Job
+                    </FormLabel>
                     <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select Card Type" />
-                      </SelectTrigger>
+                      <Input
+                        {...field}
+                        placeholder="Your job title"
+                        className="rounded-lg border border-pink-300 shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-pink-400"
+                      />
                     </FormControl>
-                    <SelectContent>
-                      <SelectItem value="Modern">Modern</SelectItem>
-                      <SelectItem value="Minimal">Minimal</SelectItem>
-                      <SelectItem value="Corporate">Corporate</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
+                    <FormMessage className="text-xs text-red-500 mt-1" />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={control}
+                name="company"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel className="text-sm font-semibold text-pink-700">
+                      Company
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        placeholder="Your company"
+                        className="rounded-lg border border-pink-300 shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-pink-400"
+                      />
+                    </FormControl>
+                    <FormMessage className="text-xs text-red-500 mt-1" />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            {/* Website */}
+            <FormField
+              control={control}
+              name="web_site"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel className="text-sm font-semibold text-pink-700">
+                    Website
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      placeholder="https://example.com"
+                      className="rounded-lg border border-pink-300 shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-pink-400"
+                    />
+                  </FormControl>
+                  <FormMessage className="text-xs text-red-500 mt-1" />
                 </FormItem>
               )}
             />
 
             {/* Social Links */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Social Media Links</h3>
-              {fields.map((fieldItem, index) => (
-                <div key={fieldItem.id} className="border p-4 rounded-md space-y-3 relative">
+            <div>
+              <h3 className="text-xl font-semibold mb-4 text-pink-600">
+                Social Media Links
+              </h3>
+              {fields.map((fieldItem, idx) => (
+                <div
+                  key={fieldItem.id}
+                  className="relative mb-6 p-5 border border-pink-200 rounded-xl shadow-sm bg-pink-50"
+                >
                   <Button
                     type="button"
                     variant="ghost"
                     size="icon"
-                    className="absolute top-2 right-2"
-                    onClick={() => remove(index)}
+                    className="absolute top-3 right-3"
+                    onClick={() => {
+                      remove(idx);
+                      setIconPreviews((prev) => {
+                        const copy = { ...prev };
+                        delete copy[idx];
+                        return copy;
+                      });
+                      setSocialIcons((prev) => {
+                        const copy = { ...prev };
+                        delete copy[idx];
+                        return copy;
+                      });
+                    }}
                   >
-                    <Trash2 className="w-4 h-4 text-red-500" />
+                    <Trash2 className="w-5 h-5 text-pink-600" />
                   </Button>
 
                   {/* Icon Upload */}
-                  <div className="flex items-center space-x-4">
-                    <label htmlFor={`icon-upload-${index}`} className="cursor-pointer relative">
-                      <div className="w-12 h-12 rounded-md overflow-hidden bg-gray-100 flex items-center justify-center">
-                        <Avatar>
-                          <AvatarImage src={iconPreviews[index]} alt="icon" />
-                          <AvatarFallback>IC</AvatarFallback>
-                        </Avatar>
-                      </div>
-                      {iconPreviews[index] && (
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setSocialIcons((prev) => ({ ...prev, [index]: null }));
-                            setIconPreviews((prev) => {
-                              const newPreview = { ...prev };
-                              delete newPreview[index];
-                              return newPreview;
-                            });
-                          }}
-                          className="absolute -top-1 -right-1 bg-white text-red-500 rounded-full w-5 h-5 flex items-center justify-center text-xs"
-                        >
-                          ✕
-                        </button>
+                  <label
+                    htmlFor={`icon-upload-${idx}`}
+                    className="cursor-pointer mb-4 flex items-center space-x-4"
+                  >
+                    <Avatar className="w-14 h-14 ring-2 ring-pink-400 rounded-full">
+                      {iconPreviews[idx] ? (
+                        <AvatarImage src={iconPreviews[idx]} alt="Icon" />
+                      ) : (
+                        <AvatarFallback>
+                          {watch(`social.${idx}.platform`)?.[0]?.toUpperCase() || "?"}
+                        </AvatarFallback>
                       )}
-                    </label>
-                    <Input
-                      id={`icon-upload-${index}`}
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      onChange={(e) => {
-                        const file = e.target.files?.[0];
-                        if (file && isValidImage(file)) {
-                          setSocialIcons((prev) => ({ ...prev, [index]: file }));
-                          setIconPreviews((prev) => ({ ...prev, [index]: URL.createObjectURL(file) }));
-                        } else {
-                          alert("Icon must be an image under 2MB");
-                        }
-                      }}
-                    />
-                  </div>
+                    </Avatar>
+                    <span className="text-sm text-pink-600 underline font-semibold">
+                    </span>
+                  </label>
+                  <input
+                    type="file"
+                    id={`icon-upload-${idx}`}
+                    accept="image/png, image/jpeg, image/jpg, image/webp"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file && isValidImage(file)) {
+                        setSocialIcons((prev) => ({ ...prev, [idx]: file }));
+                        setIconPreviews((prev) => ({
+                          ...prev,
+                          [idx]: URL.createObjectURL(file),
+                        }));
+                      } else {
+                        alert("Invalid image or too large (max 2MB)");
+                      }
+                    }}
+                  />
 
-                  {/* Platform & URL Inputs */}
-                  {(["platform", "url"] as const).map((fieldKey) => {
-                    const name = `social.${index}.${fieldKey}` as
-                      | `social.${number}.platform`
-                      | `social.${number}.url`;
+                  {/* Platform */}
+                  <FormField
+                    control={control}
+                    name={`social.${idx}.platform`}
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col mb-3">
+                        <FormLabel className="text-sm font-semibold text-pink-700">
+                          Platform
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            placeholder="Platform name"
+                            className="rounded-lg border border-pink-300 shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-pink-400"
+                          />
+                        </FormControl>
+                        <FormMessage className="text-xs text-red-500 mt-1" />
+                      </FormItem>
+                    )}
+                  />
 
-                    return (
-                      <FormField
-                        key={fieldKey}
-                        control={control}
-                        name={name}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>{fieldKey === "platform" ? "Platform" : "URL"}</FormLabel>
-                            <FormControl>
-                              <Input {...field} placeholder={fieldKey === "url" ? "https://..." : "Platform"} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    );
-                  })}
+                  {/* URL */}
+                  <FormField
+                    control={control}
+                    name={`social.${idx}.url`}
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col">
+                        <FormLabel className="text-sm font-semibold text-pink-700">
+                          URL
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            placeholder="https://..."
+                            className="rounded-lg border border-pink-300 shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-pink-400"
+                          />
+                        </FormControl>
+                        <FormMessage className="text-xs text-red-500 mt-1" />
+                      </FormItem>
+                    )}
+                  />
                 </div>
               ))}
-              <Button type="button" variant="outline" onClick={() => append({ platform: "", icon: "", url: "" })}>
-                <Plus className="w-4 h-4 mr-2" /> Add Social Link
+
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => append({ platform: "", icon: "", url: "" })}
+                className="flex items-center space-x-2 border-pink-400 text-pink-600 hover:bg-pink-100"
+              >
+                <Plus className="w-5 h-5" />
+                <span>Add Social Link</span>
               </Button>
             </div>
 
-            <Button type="submit" disabled={isSubmitting || createCardMutation.isPending} className="w-full">
-              {isSubmitting || createCardMutation.isPending ? "Creating..." : "Create"}
-            </Button>
+            {/* Submit */}
+<div className="flex flex-col-12 sm:flex-row justify-center gap-4 pt-4">
+  <Button
+    type="submit"
+    className="w-40 sm:w-40 bg-pink-600 hover:bg-pink-700 text-white font-semibold py-3 rounded-xl shadow-lg transition duration-200 disabled:opacity-50"
+    disabled={createCardMutation.isPending}
+  >
+    {createCardMutation.isPending ? "Creating..." : "Create Card"}
+  </Button>
+  
+  <Button
+    type="button"
+    variant="outline"
+    className="w-40 sm:w-40 border-pink-400 text-pink-600 hover:bg-pink-100 font-semibold py-3 rounded-xl shadow"
+    onClick={() => router.back()}
+  >
+    Back
+  </Button>
+</div>
+
           </form>
         </Form>
       </div>

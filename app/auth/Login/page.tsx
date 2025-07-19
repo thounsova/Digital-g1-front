@@ -57,7 +57,7 @@ const Login = () => {
     <div className="min-h-screen bg-gradient-to-br from-pink-100 via-blue-100 to-purple-100 flex items-center justify-center px-4">
       <div className="w-full max-w-4xl bg-white/70 backdrop-blur-lg rounded-3xl shadow-2xl overflow-hidden grid grid-cols-1 md:grid-cols-2 border border-purple-200">
         {/* Left Panel */}
-        <div className="bg-gradient-to-tr from-pink-400 to-purple-500 text-white flex flex-col items-center justify-center p-8 space-y-4">
+        <div className="bg-gradient-to-tr from-pink-700 to-pink-500 text-white flex flex-col items-center justify-center p-8 space-y-4">
           <h2 className="text-3xl font-bold">Welcome Back! </h2>
           <p className="text-sm text-center max-w-[80%]">
             Don’t have an account yet? Sign up and join the fun!
@@ -121,7 +121,7 @@ const Login = () => {
               <Button
                 type="submit"
                 disabled={isPending}
-                className={`w-full h-12 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-semibold shadow-md transition ${
+                className={`w-full h-12 rounded-xl bg-pink-600 hover:bg-purple-700 text-white font-semibold shadow-md transition ${
                   isPending ? "opacity-60 cursor-not-allowed" : ""
                 }`}
               >

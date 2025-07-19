@@ -1,41 +1,39 @@
+// app/ClientRootWrapper.tsx
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 
-// Helper to get cookie by name
-function getCookie(name: string) {
-  const matches = document.cookie.match(
-    new RegExp(
-      "(?:^|; )" +
-        name.replace(/([.$?*|{}()[\]\\/+^])/g, "\\$1") +
-        "=([^;]*)"
-    )
-  );
-  return matches ? decodeURIComponent(matches[1]) : undefined;
-}
+const protectedRoutes = ["/", ]; // ✅ Add more protected routes here
 
 export default function ClientRootWrapper({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-  const [checked, setChecked] = useState(false);
+  const pathname = usePathname();
+
+  const [loading, setLoading] = useState(true);
+  const [authenticated, setAuthenticated] = useState(false);
 
   useEffect(() => {
-    const token = getCookie("token");
-    const path = window.location.pathname;
-    const isAuthPage = path.startsWith("/auth");
+    const token = Cookies.get("token"); // 🔐 check cookie
 
-    if (!token && !isAuthPage) {
-      // router.replace("/auth/Login");
+    const isProtected = protectedRoutes.some((route) =>
+      pathname === route || pathname.startsWith(route + "/")
+    );
+
+    if (!token && isProtected) {
+      router.push("/auth/Login"); // 🔐 redirect
+    } else {
+      setAuthenticated(true);
     }
 
-    if (token && isAuthPage) {
-      router.replace("/");
-    }
+    setLoading(false);
+  }, [pathname, router]);
 
-    setChecked(true); // allow rendering after check
-  }, [router]);
+  if (loading) {
+  }
 
-  if (!checked) return null; // prevent flickering while checking
+  if (!authenticated) return null;
 
   return <>{children}</>;
 }

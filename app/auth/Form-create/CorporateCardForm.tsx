@@ -70,15 +70,7 @@ const CorporateCardForm = ({
           <div className="text-center">
             <div className="mb-4 flex items-center justify-center">
               <div className="w-24 h-24 bg-gradient-to-br from-yellow-400 via-pink-400 to-purple-400 rounded-2xl rotate-12 flex items-center justify-center shadow-lg">
-                <Avatar className="w-24 h-24 border-4 border-white shadow-lg">
-                  <AvatarImage
-                    src={me?.data?.avatar}
-                    alt={me?.data?.user_name}
-                  />
-                  <AvatarFallback className="text-2xl font-semibold bg-gradient-to-br from-blue-500 to-purple-600 text-white">
-                    {me?.data?.user_name}
-                  </AvatarFallback>
-                </Avatar>
+             
               </div>
             </div>
 

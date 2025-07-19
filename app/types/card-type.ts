@@ -12,11 +12,24 @@ export interface SocialLink {
   updated_at: string;
   created_at: string;
 }
-
+export interface CardData {
+  gender: GenderType;
+  job?: string;
+  web_site?: string;
+  bio: string;
+  nationality?: string;
+  dob?: string;
+  address?: string;
+  phone?: string;
+  card_type?: CardType;
+  company?: string;
+  socialLinks?: SocialLink[];
+}
 export interface CardItem {
   id: string;
-  card : string;
+  card: CardData; // <-- FIXED: card is an object, not string
   idCard: string;
+  avatar: string;
   gender: GenderType;
   dob: string;
   address: string;
@@ -40,9 +53,9 @@ export interface CardItem {
 
 export interface CreateCardType {
   gender: GenderType;
-  avatar: string; // Keep as string if avatar is required
   nationality: string;
   dob: string;
+  avatar: string;
   address: string;
   phone: string;
   card_type: CardType;

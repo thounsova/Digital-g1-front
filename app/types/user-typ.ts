@@ -6,10 +6,14 @@ export interface IUser {
   data: UserData;
   avatar?: string;
   isLoading?: string;
+    cover : string;
+
+
 }
 
 export interface UserData {
   id: string;
+  cover : string;
   full_name?: string;
   user_name: string;
   email: string;

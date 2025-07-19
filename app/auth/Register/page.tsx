@@ -82,7 +82,7 @@ const Register = () => {
     <div className="min-h-screen bg-gradient-to-br from-pink-100 via-blue-100 to-purple-100 flex items-center justify-center px-4">
       <div className="w-full max-w-4xl bg-white/80 backdrop-blur-md rounded-3xl shadow-2xl overflow-hidden grid grid-cols-1 md:grid-cols-2 border border-pink-200">
         {/* Left Side - Welcome */}
-        <div className="bg-gradient-to-tr from-purple-500 to-pink-400 text-white flex flex-col items-center justify-center p-8 space-y-4">
+        <div className="bg-gradient-to-tr from-pink-700 to-pink-500 text-white flex flex-col items-center justify-center p-8 space-y-4">
           <h2 className="text-3xl font-bold">Welcome Aboard! </h2>
           <p className="text-sm text-center max-w-[80%]">
             Already have an account? Let's go sign in!
@@ -186,7 +186,7 @@ const Register = () => {
               <Button
                 type="submit"
                 disabled={isPending}
-                className={`w-full h-12 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-semibold transition ${
+                className={`w-full h-12 rounded-xl bg-pink-600 hover:bg-purple-700 text-white font-semibold transition ${
                   isPending ? "opacity-60 cursor-not-allowed" : ""
                 }`}
               >
