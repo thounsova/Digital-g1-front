@@ -1,7 +1,10 @@
-import type { DeviceInfo } from "@/types/device";
+import type { DeviceInfo } from "@/app/types/device";
 import { v4 as uuidv4 } from "uuid";
 import { isBrowser } from "@/lib/browser.util";
 
+/**
+ * Get device info from localStorage (if available in browser)
+ */
 export const getLocalDeviceInfo = (): DeviceInfo | null => {
   if (isBrowser) {
     const device = localStorage.getItem("device-info");
@@ -10,25 +13,34 @@ export const getLocalDeviceInfo = (): DeviceInfo | null => {
   return null;
 };
 
-export const setLocalDeviceInfo = (params: DeviceInfo) => {
+/**
+ * Save device info to localStorage
+ */
+export const setLocalDeviceInfo = (params: DeviceInfo): void => {
   if (isBrowser) {
     localStorage.setItem("device-info", JSON.stringify(params));
   }
 };
 
-function setDeviceId(e: string) {
-  return localStorage.setItem("deviceId", e);
+/**
+ * Save device ID directly
+ */
+function setDeviceId(id: string): void {
+  if (isBrowser) {
+    localStorage.setItem("deviceId", id);
+  }
 }
-export function deviceId() {
-  const deviceId =
-    (typeof window !== "undefined" && localStorage.getItem("deviceId")) || "";
-  if (deviceId) {
-    return deviceId;
-  }
-  const newDeviceId = uuidv4();
-  if (typeof localStorage !== "undefined") {
-    setDeviceId(newDeviceId);
-  }
 
-  return newDeviceId;
+/**
+ * Get device ID from localStorage or generate a new one
+ */
+export function deviceId(): string {
+  if (!isBrowser) return "";
+
+  const existingId = localStorage.getItem("deviceId");
+  if (existingId) return existingId;
+
+  const newId = uuidv4();
+  setDeviceId(newId);
+  return newId;
 }

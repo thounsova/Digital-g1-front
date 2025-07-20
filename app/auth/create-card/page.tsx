@@ -159,9 +159,9 @@ export default function CreateCardForm() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-100 via-purple-100 to-blue-100 p-6">
-      <div className="max-w-3xl mx-auto bg-white p-8 rounded-2xl shadow-lg border border-pink-300">
-        <h1 className="text-3xl font-extrabold mb-8 text-center text-pink-600 tracking-wide">
+    <div className="min-h-screen bg-gradient-to-br from-yellow-100 via-orange-100 to-yellow-200 p-6">
+      <div className="max-w-3xl mx-auto bg-white p-8 rounded-2xl shadow-lg border border-orange-300">
+        <h1 className="text-3xl font-extrabold mb-8 text-center text-orange-600 tracking-wide">
           Create Your Card
         </h1>
 
@@ -174,7 +174,7 @@ export default function CreateCardForm() {
                 name="card_type"
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
-                    <FormLabel className="text-sm font-semibold text-pink-700">
+                    <FormLabel className="text-sm font-semibold text-orange-700">
                       Card Type
                     </FormLabel>
                     <FormControl>
@@ -182,7 +182,7 @@ export default function CreateCardForm() {
                         value={field.value}
                         onValueChange={field.onChange}
                       >
-                        <SelectTrigger className="w-full py-2 px-3 rounded-lg border border-pink-300 text-pink-800 shadow-sm bg-pink-50 hover:bg-pink-100 focus:ring-2 focus:ring-pink-400">
+                        <SelectTrigger className="w-full py-2 px-3 rounded-lg border border-orange-300 text-orange-800 shadow-sm bg-orange-50 hover:bg-orange-100 focus:ring-2 focus:ring-orange-400">
                           <SelectValue placeholder="Select Card Type" />
                         </SelectTrigger>
                         <SelectContent>
@@ -202,7 +202,7 @@ export default function CreateCardForm() {
                 name="gender"
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
-                    <FormLabel className="text-sm font-semibold text-pink-700">
+                    <FormLabel className="text-sm font-semibold text-orange-700">
                       Gender
                     </FormLabel>
                     <FormControl>
@@ -210,7 +210,7 @@ export default function CreateCardForm() {
                         value={field.value}
                         onValueChange={field.onChange}
                       >
-                        <SelectTrigger className="w-full py-2 px-3 rounded-lg border border-pink-300 text-pink-800 shadow-sm bg-pink-50 hover:bg-pink-100 focus:ring-2 focus:ring-pink-400">
+                        <SelectTrigger className="w-full py-2 px-3 rounded-lg border border-orange-300 text-orange-800 shadow-sm bg-orange-50 hover:bg-orange-100 focus:ring-2 focus:ring-orange-400">
                           <SelectValue placeholder="Select Gender" />
                         </SelectTrigger>
                         <SelectContent>
@@ -232,14 +232,14 @@ export default function CreateCardForm() {
                 name="nationality"
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
-                    <FormLabel className="text-sm font-semibold text-pink-700">
+                    <FormLabel className="text-sm font-semibold text-orange-700">
                       Nationality
                     </FormLabel>
                     <FormControl>
                       <Input
                         {...field}
                         placeholder="e.g. American"
-                        className="rounded-lg border border-pink-300 shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-pink-400"
+                        className="rounded-lg border border-orange-300 shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-orange-400"
                       />
                     </FormControl>
                     <FormMessage className="text-xs text-red-500 mt-1" />
@@ -252,14 +252,14 @@ export default function CreateCardForm() {
                 name="dob"
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
-                    <FormLabel className="text-sm font-semibold text-pink-700">
+                    <FormLabel className="text-sm font-semibold text-orange-700">
                       Date of Birth
                     </FormLabel>
                     <FormControl>
                       <Input
                         type="date"
                         {...field}
-                        className="rounded-lg border border-pink-300 shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-pink-400"
+                        className="rounded-lg border border-orange-300 shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-orange-400"
                       />
                     </FormControl>
                     <FormMessage className="text-xs text-red-500 mt-1" />
@@ -275,14 +275,14 @@ export default function CreateCardForm() {
                 name="address"
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
-                    <FormLabel className="text-sm font-semibold text-pink-700">
+                    <FormLabel className="text-sm font-semibold text-orange-700">
                       Address
                     </FormLabel>
                     <FormControl>
                       <Input
                         {...field}
                         placeholder="Your address"
-                        className="rounded-lg border border-pink-300 shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-pink-400"
+                        className="rounded-lg border border-orange-300 shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-orange-400"
                       />
                     </FormControl>
                     <FormMessage className="text-xs text-red-500 mt-1" />
@@ -295,14 +295,14 @@ export default function CreateCardForm() {
                 name="phone"
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
-                    <FormLabel className="text-sm font-semibold text-pink-700">
+                    <FormLabel className="text-sm font-semibold text-orange-700">
                       Phone
                     </FormLabel>
                     <FormControl>
                       <Input
                         {...field}
                         placeholder="+1 123 456 7890"
-                        className="rounded-lg border border-pink-300 shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-pink-400"
+                        className="rounded-lg border border-orange-300 shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-orange-400"
                       />
                     </FormControl>
                     <FormMessage className="text-xs text-red-500 mt-1" />
@@ -317,14 +317,14 @@ export default function CreateCardForm() {
               name="bio"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel className="text-sm font-semibold text-pink-700">
+                  <FormLabel className="text-sm font-semibold text-orange-700">
                     Bio
                   </FormLabel>
                   <FormControl>
                     <Input
                       {...field}
                       placeholder="Tell us about yourself"
-                      className="rounded-lg border border-pink-300 shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-pink-400"
+                      className="rounded-lg border border-orange-300 shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-orange-400"
                     />
                   </FormControl>
                   <FormMessage className="text-xs text-red-500 mt-1" />
@@ -339,14 +339,14 @@ export default function CreateCardForm() {
                 name="job"
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
-                    <FormLabel className="text-sm font-semibold text-pink-700">
+                    <FormLabel className="text-sm font-semibold text-orange-700">
                       Job
                     </FormLabel>
                     <FormControl>
                       <Input
                         {...field}
                         placeholder="Your job title"
-                        className="rounded-lg border border-pink-300 shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-pink-400"
+                        className="rounded-lg border border-orange-300 shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-orange-400"
                       />
                     </FormControl>
                     <FormMessage className="text-xs text-red-500 mt-1" />
@@ -359,14 +359,14 @@ export default function CreateCardForm() {
                 name="company"
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
-                    <FormLabel className="text-sm font-semibold text-pink-700">
+                    <FormLabel className="text-sm font-semibold text-orange-700">
                       Company
                     </FormLabel>
                     <FormControl>
                       <Input
                         {...field}
                         placeholder="Your company"
-                        className="rounded-lg border border-pink-300 shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-pink-400"
+                        className="rounded-lg border border-orange-300 shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-orange-400"
                       />
                     </FormControl>
                     <FormMessage className="text-xs text-red-500 mt-1" />
@@ -381,14 +381,14 @@ export default function CreateCardForm() {
               name="web_site"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel className="text-sm font-semibold text-pink-700">
+                  <FormLabel className="text-sm font-semibold text-orange-700">
                     Website
                   </FormLabel>
                   <FormControl>
                     <Input
                       {...field}
                       placeholder="https://example.com"
-                      className="rounded-lg border border-pink-300 shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-pink-400"
+                      className="rounded-lg border border-orange-300 shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-orange-400"
                     />
                   </FormControl>
                   <FormMessage className="text-xs text-red-500 mt-1" />
@@ -398,13 +398,13 @@ export default function CreateCardForm() {
 
             {/* Social Links */}
             <div>
-              <h3 className="text-xl font-semibold mb-4 text-pink-600">
+              <h3 className="text-xl font-semibold mb-4 text-orange-600">
                 Social Media Links
               </h3>
               {fields.map((fieldItem, idx) => (
                 <div
                   key={fieldItem.id}
-                  className="relative mb-6 p-5 border border-pink-200 rounded-xl shadow-sm bg-pink-50"
+                  className="relative mb-6 p-5 border border-orange-200 rounded-xl shadow-sm bg-orange-50"
                 >
                   <Button
                     type="button"
@@ -425,7 +425,7 @@ export default function CreateCardForm() {
                       });
                     }}
                   >
-                    <Trash2 className="w-5 h-5 text-pink-600" />
+                    <Trash2 className="w-5 h-5 text-orange-600" />
                   </Button>
 
                   {/* Icon Upload */}
@@ -433,7 +433,7 @@ export default function CreateCardForm() {
                     htmlFor={`icon-upload-${idx}`}
                     className="cursor-pointer mb-4 flex items-center space-x-4"
                   >
-                    <Avatar className="w-14 h-14 ring-2 ring-pink-400 rounded-full">
+                    <Avatar className="w-14 h-14 ring-2 ring-orange-400 rounded-full">
                       {iconPreviews[idx] ? (
                         <AvatarImage src={iconPreviews[idx]} alt="Icon" />
                       ) : (
@@ -442,7 +442,7 @@ export default function CreateCardForm() {
                         </AvatarFallback>
                       )}
                     </Avatar>
-                    <span className="text-sm text-pink-600 underline font-semibold">
+                    <span className="text-sm text-orange-600 underline font-semibold">
                     </span>
                   </label>
                   <input
@@ -470,14 +470,14 @@ export default function CreateCardForm() {
                     name={`social.${idx}.platform`}
                     render={({ field }) => (
                       <FormItem className="flex flex-col mb-3">
-                        <FormLabel className="text-sm font-semibold text-pink-700">
+                        <FormLabel className="text-sm font-semibold text-orange-700">
                           Platform
                         </FormLabel>
                         <FormControl>
                           <Input
                             {...field}
                             placeholder="Platform name"
-                            className="rounded-lg border border-pink-300 shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-pink-400"
+                            className="rounded-lg border border-orange-300 shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-orange-400"
                           />
                         </FormControl>
                         <FormMessage className="text-xs text-red-500 mt-1" />
@@ -491,14 +491,14 @@ export default function CreateCardForm() {
                     name={`social.${idx}.url`}
                     render={({ field }) => (
                       <FormItem className="flex flex-col">
-                        <FormLabel className="text-sm font-semibold text-pink-700">
+                        <FormLabel className="text-sm font-semibold text-orange-700">
                           URL
                         </FormLabel>
                         <FormControl>
                           <Input
                             {...field}
                             placeholder="https://..."
-                            className="rounded-lg border border-pink-300 shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-pink-400"
+                            className="rounded-lg border border-orange-300 shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-orange-400"
                           />
                         </FormControl>
                         <FormMessage className="text-xs text-red-500 mt-1" />
@@ -512,7 +512,7 @@ export default function CreateCardForm() {
                 type="button"
                 variant="outline"
                 onClick={() => append({ platform: "", icon: "", url: "" })}
-                className="flex items-center space-x-2 border-pink-400 text-pink-600 hover:bg-pink-100"
+                className="flex items-center space-x-2 border-orange-400 text-orange-600 hover:bg-orange-100"
               >
                 <Plus className="w-5 h-5" />
                 <span>Add Social Link</span>
@@ -520,25 +520,24 @@ export default function CreateCardForm() {
             </div>
 
             {/* Submit */}
-<div className="flex flex-col-12 sm:flex-row justify-center gap-4 pt-4">
-  <Button
-    type="submit"
-    className="w-40 sm:w-40 bg-pink-600 hover:bg-pink-700 text-white font-semibold py-3 rounded-xl shadow-lg transition duration-200 disabled:opacity-50"
-    disabled={createCardMutation.isPending}
-  >
-    {createCardMutation.isPending ? "Creating..." : "Create Card"}
-  </Button>
-  
-  <Button
-    type="button"
-    variant="outline"
-    className="w-40 sm:w-40 border-pink-400 text-pink-600 hover:bg-pink-100 font-semibold py-3 rounded-xl shadow"
-    onClick={() => router.back()}
-  >
-    Back
-  </Button>
-</div>
+            <div className="flex flex-col-12 sm:flex-row justify-center gap-4 pt-4">
+              <Button
+                type="submit"
+                className="w-40 sm:w-40 bg-orange-600 hover:bg-orange-700 text-white font-semibold py-3 rounded-xl shadow-lg transition duration-200 disabled:opacity-50"
+                disabled={createCardMutation.isPending}
+              >
+                {createCardMutation.isPending ? "Creating..." : "Create Card"}
+              </Button>
 
+              <Button
+                type="button"
+                variant="outline"
+                className="w-40 sm:w-40 border-orange-400 text-orange-600 hover:bg-orange-100 font-semibold py-3 rounded-xl shadow"
+                onClick={() => router.back()}
+              >
+                Back
+              </Button>
+            </div>
           </form>
         </Form>
       </div>

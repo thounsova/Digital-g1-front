@@ -103,7 +103,7 @@ const PublicCardServerSide = ({ cards }: Props) => {
               onClick={() => setSelectedType(type)}
               className={`flex-1 px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-150 ${
                 selectedType === type
-                  ? "bg-pink-600 text-white shadow"
+                  ? "bg-orange-600 hover:bg-orange-700 text-white  shadow"
                   : "bg-gray-100 text-gray-800 hover:bg-gray-200"
               }`}
             >

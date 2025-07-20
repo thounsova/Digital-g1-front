@@ -203,124 +203,125 @@ export default function ProfileForm({
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-100 to-pink-200 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-orange-100 to-orange-200 p-6">
       <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-xl p-8 space-y-6">
         <Form {...form}>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {/* Card Type */}
-        <div className="grid grid-cols-2 gap-6">
-                    <FormField
-                      control={control}
-                      name="card_type"
-                      render={({ field }) => (
-                        <FormItem className="flex flex-col">
-                          <FormLabel className="text-sm font-semibold text-pink-700">
-                            Card Type
-                          </FormLabel>
-                          <FormControl>
-                            <Select
-                              value={field.value}
-                              onValueChange={field.onChange}
-                            >
-                              <SelectTrigger className="w-full py-2 px-3 rounded-lg border border-pink-300 text-pink-800 shadow-sm bg-pink-50 hover:bg-pink-100 focus:ring-2 focus:ring-pink-400">
-                                <SelectValue placeholder="Select Card Type" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="Modern">Modern</SelectItem>
-                                <SelectItem value="Minimal">Minimal</SelectItem>
-                                <SelectItem value="Corporate">Corporate</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </FormControl>
-                          <FormMessage className="text-xs text-red-500 mt-1" />
-                        </FormItem>
-                      )}
-                    />
-      
-                    <FormField
-                      control={control}
-                      name="gender"
-                      render={({ field }) => (
-                        <FormItem className="flex flex-col">
-                          <FormLabel className="text-sm font-semibold text-pink-700">
-                            Gender
-                          </FormLabel>
-                          <FormControl>
-                            <Select
-                              value={field.value}
-                              onValueChange={field.onChange}
-                            >
-                              <SelectTrigger className="w-full py-2 px-3 rounded-lg border border-pink-300 text-pink-800 shadow-sm bg-pink-50 hover:bg-pink-100 focus:ring-2 focus:ring-pink-400">
-                                <SelectValue placeholder="Select Gender" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="male">Male</SelectItem>
-                                <SelectItem value="female">Female</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </FormControl>
-                          <FormMessage className="text-xs text-red-500 mt-1" />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
+            <div className="grid grid-cols-2 gap-6">
+              <FormField
+                control={control}
+                name="card_type"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel className="text-sm font-semibold text-orange-700">
+                      Card Type
+                    </FormLabel>
+                    <FormControl>
+                      <Select
+                        value={field.value}
+                        onValueChange={field.onChange}
+                      >
+                        <SelectTrigger className="w-full py-2 px-3 rounded-lg border border-orange-300 text-orange-800 shadow-sm bg-orange-50 hover:bg-orange-100 focus:ring-2 focus:ring-orange-400">
+                          <SelectValue placeholder="Select Card Type" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Modern">Modern</SelectItem>
+                          <SelectItem value="Minimal">Minimal</SelectItem>
+                          <SelectItem value="Corporate">Corporate</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage className="text-xs text-red-500 mt-1" />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={control}
+                name="gender"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel className="text-sm font-semibold text-orange-700">
+                      Gender
+                    </FormLabel>
+                    <FormControl>
+                      <Select
+                        value={field.value}
+                        onValueChange={field.onChange}
+                      >
+                        <SelectTrigger className="w-full py-2 px-3 rounded-lg border border-orange-300 text-orange-800 shadow-sm bg-orange-50 hover:bg-orange-100 focus:ring-2 focus:ring-orange-400">
+                          <SelectValue placeholder="Select Gender" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="male">Male</SelectItem>
+                          <SelectItem value="female">Female</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage className="text-xs text-red-500 mt-1" />
+                  </FormItem>
+                )}
+              />
+            </div>
 
             {/* Nationality, DOB, Address, Bio, Company, Job, Website, Phone */}
-           <div className="grid grid-cols-2 gap-6">
-                         <FormField
-                           control={control}
-                           name="nationality"
-                           render={({ field }) => (
-                             <FormItem className="flex flex-col">
-                               <FormLabel className="text-sm font-semibold text-pink-700">
-                                 Nationality
-                               </FormLabel>
-                               <FormControl>
-                                 <Input
-                                   {...field}
-                                   placeholder="e.g. American"
-                                   className="rounded-lg border border-pink-300 shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-pink-400"
-                                 />
-                               </FormControl>
-                               <FormMessage className="text-xs text-red-500 mt-1" />
-                             </FormItem>
-                           )}
-                         />
-           
-                         <FormField
-                           control={control}
-                           name="dob"
-                           render={({ field }) => (
-                             <FormItem className="flex flex-col">
-                               <FormLabel className="text-sm font-semibold text-pink-700">
-                                 Date of Birth
-                               </FormLabel>
-                               <FormControl>
-                                 <Input
-                                   type="date"
-                                   {...field}
-                                   className="rounded-lg border border-pink-300 shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-pink-400"
-                                 />
-                               </FormControl>
-                               <FormMessage className="text-xs text-red-500 mt-1" />
-                             </FormItem>
-                           )}
-                         />
-                       </div>
-  <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-2 gap-6">
+              <FormField
+                control={control}
+                name="nationality"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel className="text-sm font-semibold text-orange-700">
+                      Nationality
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        placeholder="e.g. American"
+                        className="rounded-lg border border-orange-300 shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-orange-400"
+                      />
+                    </FormControl>
+                    <FormMessage className="text-xs text-red-500 mt-1" />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={control}
+                name="dob"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel className="text-sm font-semibold text-orange-700">
+                      Date of Birth
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="date"
+                        {...field}
+                        className="rounded-lg border border-orange-300 shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-orange-400"
+                      />
+                    </FormControl>
+                    <FormMessage className="text-xs text-red-500 mt-1" />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-6">
               <FormField
                 control={control}
                 name="address"
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
-                    <FormLabel className="text-sm font-semibold text-pink-700">
+                    <FormLabel className="text-sm font-semibold text-orange-700">
                       Address
                     </FormLabel>
                     <FormControl>
                       <Input
                         {...field}
                         placeholder="Your address"
-                        className="rounded-lg border border-pink-300 shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-pink-400"
+                        className="rounded-lg border border-orange-300 shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-orange-400"
                       />
                     </FormControl>
                     <FormMessage className="text-xs text-red-500 mt-1" />
@@ -333,14 +334,14 @@ export default function ProfileForm({
                 name="phone"
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
-                    <FormLabel className="text-sm font-semibold text-pink-700">
+                    <FormLabel className="text-sm font-semibold text-orange-700">
                       Phone
                     </FormLabel>
                     <FormControl>
                       <Input
                         {...field}
                         placeholder="+1 123 456 7890"
-                        className="rounded-lg border border-pink-300 shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-pink-400"
+                        className="rounded-lg border border-orange-300 shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-orange-400"
                       />
                     </FormControl>
                     <FormMessage className="text-xs text-red-500 mt-1" />
@@ -348,208 +349,215 @@ export default function ProfileForm({
                 )}
               />
             </div>
-              <div className="grid grid-cols-2 gap-6">
 
+            <div className="grid grid-cols-2 gap-6">
+              <FormField
+                control={control}
+                name="bio"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel className="text-sm font-semibold text-orange-700">
+                      Bio
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        placeholder="Tell us about yourself"
+                        className="rounded-lg border border-orange-300 shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-orange-400"
+                      />
+                    </FormControl>
+                    <FormMessage className="text-xs text-red-500 mt-1" />
+                  </FormItem>
+                )}
+              />
+
+              {/* Job & Company */}
+              <FormField
+                control={control}
+                name="job"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel className="text-sm font-semibold text-orange-700">
+                      Job
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        placeholder="Your job title"
+                        className="rounded-lg border border-orange-300 shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-orange-400"
+                      />
+                    </FormControl>
+                    <FormMessage className="text-xs text-red-500 mt-1" />
+                  </FormItem>
+                )}
+              />
+            </div>
 
             <FormField
-                          control={control}
-                          name="bio"
-                          render={({ field }) => (
-                            <FormItem className="flex flex-col">
-                              <FormLabel className="text-sm font-semibold text-pink-700">
-                                Bio
-                              </FormLabel>
-                              <FormControl>
-                                <Input
-                                  {...field}
-                                  placeholder="Tell us about yourself"
-                                  className="rounded-lg border border-pink-300 shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-pink-400"
-                                />
-                              </FormControl>
-                              <FormMessage className="text-xs text-red-500 mt-1" />
-                            </FormItem>
-                          )}
-                        />
-            
-                        {/* Job & Company */}
-                          <FormField
-                            control={control}
-                            name="job"
-                            render={({ field }) => (
-                              <FormItem className="flex flex-col">
-                                <FormLabel className="text-sm font-semibold text-pink-700">
-                                  Job
-                                </FormLabel>
-                                <FormControl>
-                                  <Input
-                                    {...field}
-                                    placeholder="Your job title"
-                                    className="rounded-lg border border-pink-300 shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-pink-400"
-                                  />
-                                </FormControl>
-                                <FormMessage className="text-xs text-red-500 mt-1" />
-                              </FormItem>
-                            )}
-                          />
-                             </div>
-
-
-                                 <FormField
-                                             control={control}
-                                             name="company"
-                                             render={({ field }) => (
-                                               <FormItem className="flex flex-col">
-                                                 <FormLabel className="text-sm font-semibold text-pink-700">
-                                                   Company
-                                                 </FormLabel>
-                                                 <FormControl>
-                                                   <Input
-                                                     {...field}
-                                                     placeholder="Your company"
-                                                     className="rounded-lg border border-pink-300 shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-pink-400"
-                                                   />
-                                                 </FormControl>
-                                                 <FormMessage className="text-xs text-red-500 mt-1" />
-                                               </FormItem>
-                                             )}
-                                           />
-                                               <FormField
-                                                         control={control}
-                                                         name="web_site"
-                                                         render={({ field }) => (
-                                                           <FormItem className="flex flex-col">
-                                                             <FormLabel className="text-sm font-semibold text-pink-700">
-                                                               Website
-                                                             </FormLabel>
-                                                             <FormControl>
-                                                               <Input
-                                                                 {...field}
-                                                                 placeholder="https://example.com"
-                                                                 className="rounded-lg border border-pink-300 shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-pink-400"
-                                                               />
-                                                             </FormControl>
-                                                             <FormMessage className="text-xs text-red-500 mt-1" />
-                                                           </FormItem>
-                                                         )}
-                                                       />
-            {/* Social Media Links */}
-           <div className="space-y-4">
-  <h3 className="text-lg font-semibold text-pink-600">Social Media Links</h3>
-  {fields.map((fieldItem, index) => (
-    <div
-      key={fieldItem.id}
-      className="border border-pink-200 bg-pink-50 p-4 rounded-xl space-y-3 relative shadow-sm"
-    >
-      <Button
-        type="button"
-        variant="ghost"
-        size="icon"
-        className="absolute top-2 right-2"
-        onClick={() => remove(index)}
-      >
-        <Trash2 className="w-4 h-4 text-red-500" />
-      </Button>
-
-      {/* Icon Upload */}
-      <div className="space-y-2">
-        <label className="text-sm font-medium text-pink-600">Icon</label>
-        <div className="flex items-center space-x-4">
-          <label htmlFor={`icon-upload-${index}`} className="cursor-pointer">
-            <Avatar className="w-10 h-10 ring-2 ring-pink-300 hover:ring-pink-500 transition">
-              {iconPreviews[index] ? (
-                <AvatarImage src={iconPreviews[index]} alt="Icon" />
-              ) : (
-                <AvatarFallback>
-                  {fieldItem.platform?.[0]?.toUpperCase() || "?"}
-                </AvatarFallback>
+              control={control}
+              name="company"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel className="text-sm font-semibold text-orange-700">
+                    Company
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      placeholder="Your company"
+                      className="rounded-lg border border-orange-300 shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-orange-400"
+                    />
+                  </FormControl>
+                  <FormMessage className="text-xs text-red-500 mt-1" />
+                </FormItem>
               )}
-            </Avatar>
-            <input
-              type="file"
-              id={`icon-upload-${index}`}
-              accept="image/png, image/jpeg, image/jpg, image/webp"
-              className="hidden"
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (file && isValidImage(file)) {
-                  setSocialIcons((prev) => ({ ...prev, [index]: file }));
-                  setIconPreviews((prev) => ({
-                    ...prev,
-                    [index]: URL.createObjectURL(file),
-                  }));
-                } else {
-                  alert("Invalid image type or file size too large (max 2MB).");
-                }
-              }}
             />
-          </label>
-        </div>
-      </div>
+            <FormField
+              control={control}
+              name="web_site"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel className="text-sm font-semibold text-orange-700">
+                    Website
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      placeholder="https://example.com"
+                      className="rounded-lg border border-orange-300 shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-orange-400"
+                    />
+                  </FormControl>
+                  <FormMessage className="text-xs text-red-500 mt-1" />
+                </FormItem>
+              )}
+            />
 
-      {/* Platform Input */}
-      <FormField
-        control={control}
-        name={`social.${index}.platform`}
-        render={({ field }) => (
-          <FormItem className="flex flex-col mb-3">
-            <FormLabel className="text-sm font-semibold text-pink-700">
-              Platform
-            </FormLabel>
-            <FormControl>
-              <Input
-                {...field}
-                placeholder="e.g. Facebook, Twitter"
-                className="rounded-lg border border-pink-300 shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-pink-400"
-              />
-            </FormControl>
-            <FormMessage className="text-xs text-red-500 mt-1" />
-          </FormItem>
-        )}
-      />
+            {/* Social Media Links */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold text-orange-600">
+                Social Media Links
+              </h3>
+              {fields.map((fieldItem, index) => (
+                <div
+                  key={fieldItem.id}
+                  className="border border-orange-200 bg-orange-50 p-4 rounded-xl space-y-3 relative shadow-sm"
+                >
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="absolute top-2 right-2"
+                    onClick={() => remove(index)}
+                  >
+                    <Trash2 className="w-4 h-4 text-red-500" />
+                  </Button>
 
-      {/* URL Input */}
-      <FormField
-        control={control}
-        name={`social.${index}.url`}
-        render={({ field }) => (
-          <FormItem className="flex flex-col mb-3">
-            <FormLabel className="text-sm font-semibold text-pink-700">
-              URL
-            </FormLabel>
-            <FormControl>
-              <Input
-                {...field}
-                placeholder="https://social.com/yourprofile"
-                className="rounded-lg border border-pink-300 shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-pink-400"
-              />
-            </FormControl>
-            <FormMessage className="text-xs text-red-500 mt-1" />
-          </FormItem>
-        )}
-      />
-    </div>
-  ))}
+                  {/* Icon Upload */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-orange-600">
+                      Icon
+                    </label>
+                    <div className="flex items-center space-x-4">
+                      <label
+                        htmlFor={`icon-upload-${index}`}
+                        className="cursor-pointer"
+                      >
+                        <Avatar className="w-10 h-10 ring-2 ring-orange-300 hover:ring-orange-500 transition">
+                          {iconPreviews[index] ? (
+                            <AvatarImage src={iconPreviews[index]} alt="Icon" />
+                          ) : (
+                            <AvatarFallback>
+                              {fieldItem.platform?.[0]?.toUpperCase() || "?"}
+                            </AvatarFallback>
+                          )}
+                        </Avatar>
+                        <input
+                          type="file"
+                          id={`icon-upload-${index}`}
+                          accept="image/png, image/jpeg, image/jpg, image/webp"
+                          className="hidden"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file && isValidImage(file)) {
+                              setSocialIcons((prev) => ({
+                                ...prev,
+                                [index]: file,
+                              }));
+                              setIconPreviews((prev) => ({
+                                ...prev,
+                                [index]: URL.createObjectURL(file),
+                              }));
+                            } else {
+                              alert(
+                                "Invalid image type or file size too large (max 2MB)."
+                              );
+                            }
+                          }}
+                        />
+                      </label>
+                    </div>
+                  </div>
 
-  <Button
-    type="button"
-    variant="outline"
-    onClick={() => append({ platform: "", icon: "", url: "" })}
-    className="flex items-center space-x-2 border-pink-300 text-pink-600 hover:bg-pink-100"
-  >
-    <Plus className="w-4 h-4" />
-    <span>Add Social Link</span>
-  </Button>
-</div>
+                  {/* Platform Input */}
+                  <FormField
+                    control={control}
+                    name={`social.${index}.platform`}
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col mb-3">
+                        <FormLabel className="text-sm font-semibold text-orange-700">
+                          Platform
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            placeholder="e.g. Facebook, Twitter"
+                            className="rounded-lg border border-orange-300 shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-orange-400"
+                          />
+                        </FormControl>
+                        <FormMessage className="text-xs text-red-500 mt-1" />
+                      </FormItem>
+                    )}
+                  />
 
+                  {/* URL Input */}
+                  <FormField
+                    control={control}
+                    name={`social.${index}.url`}
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col mb-3">
+                        <FormLabel className="text-sm font-semibold text-orange-700">
+                          URL
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            placeholder="https://social.com/yourprofile"
+                            className="rounded-lg border border-orange-300 shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-orange-400"
+                          />
+                        </FormControl>
+                        <FormMessage className="text-xs text-red-500 mt-1" />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              ))}
 
-            {/* Gender */}
-        
+              <Button
+                type="button"
+                onClick={() => append({ platform: "", icon: "", url: "" })}
+                variant="outline"
+                className="flex items-center space-x-2 text-orange-600 hover:bg-orange-100"
+              >
+                <Plus className="w-4 h-4" />
+                <span>Add Social Link</span>
+              </Button>
+            </div>
 
-            {/* Submit */}
-<div className="flex flex-col-12 sm:flex-row justify-center gap-4 pt-4">
+            {/* Submit Button */}
+          <div className="flex flex-col-12 sm:flex-row justify-center gap-4 pt-4">
             <Button
               type="submit"
-              className="w-40 bg-pink-500 hover:bg-pink-600 rounded-xl shadow text-white font-semibold transition"
+              className="w-40 bg-orange-600 hover:bg-orange-700 focus:ring-4 focus:ring-orange-400 font-semibold transition"
               disabled={updateCardMutation.isPending}
             >
               {updateCardMutation.isPending ? "Updating..." : "Update Card"}
@@ -557,7 +565,7 @@ export default function ProfileForm({
   <Button
      type="button"
      variant="outline"
-     className="w-40 sm:w-40 border-pink-400 text-pink-600 hover:bg-pink-100 font-semibold py-3 rounded-xl shadow"
+     className="w-40 sm:w-40 border-orange-400 text-pink-600 hover:bg-pink-100 font-semibold py-3 rounded-xl shadow"
      onClick={() => router.back()}
    >
      Back

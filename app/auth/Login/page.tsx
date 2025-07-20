@@ -54,45 +54,50 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-100 via-blue-100 to-purple-100 flex items-center justify-center px-4">
-      <div className="w-full max-w-4xl bg-white/70 backdrop-blur-lg rounded-3xl shadow-2xl overflow-hidden grid grid-cols-1 md:grid-cols-2 border border-purple-200">
-        {/* Left Panel */}
-        <div className="bg-gradient-to-tr from-pink-700 to-pink-500 text-white flex flex-col items-center justify-center p-8 space-y-4">
-          <h2 className="text-3xl font-bold">Welcome Back! </h2>
-          <p className="text-sm text-center max-w-[80%]">
-            Don’t have an account yet? Sign up and join the fun!
-          </p>
-          <a href="/auth/Register">
-            <button className="bg-white text-purple-600 hover:bg-pink-100 px-6 py-2 rounded-full text-sm font-semibold shadow transition-all">
-              Register
-            </button>
-          </a>
-        </div>
+    <div className="min-h-screen bg-gradient-to-br from-yellow-100 via-orange-100 to-white flex items-center justify-center px-4">
+      <div className="relative w-full max-w-5xl bg-white shadow-xl rounded-3xl overflow-hidden flex flex-col md:grid md:grid-cols-2">
+        {/* Left Image Panel - Hidden on Mobile */}
+        <div
+          className="hidden md:flex items-center justify-center bg-cover bg-center"
+          style={{
+            backgroundImage:
+              "url('https://codemyui.com/wp-content/uploads/2016/01/owl-login-form-replica-from-readme-io_.gif')",
+          }}
+        />
 
-        {/* Right Panel - Login */}
-        <div className="p-8 md:p-10 bg-white">
-          <h3 className="text-2xl font-semibold text-purple-700 mb-6 text-center">
-            Login to Your Account
-          </h3>
+        {/* Right Form Panel */}
+        <div className="p-8 md:p-12 w-full flex flex-col justify-center">
+          <div className="mb-6 text-center">
+            <h2 className="text-3xl font-bold text-orange-600 mb-2">Welcome Back!</h2>
+            <p className="text-sm text-gray-600">
+              Don't have an account?{" "}
+              <a
+                href="/auth/Register"
+                className="text-orange-500 font-medium hover:underline"
+              >
+                Register now
+              </a>
+            </p>
+          </div>
 
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <FormField
                 control={form.control}
                 name="user_name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-sm text-gray-700">
+                    <FormLabel className="text-sm font-medium text-gray-700">
                       Username
                     </FormLabel>
                     <FormControl>
                       <Input
                         placeholder="Enter your username"
                         {...field}
-                        className="rounded-xl h-12 text-sm px-4 border-gray-300 focus:ring-2 focus:ring-purple-300"
+                        className="h-11 rounded-lg text-sm border-gray-300 focus:ring-2 focus:ring-yellow-400"
                       />
                     </FormControl>
-                    <FormMessage className="text-red-500 text-xs mt-1" />
+                    <FormMessage className="text-red-500 text-xs" />
                   </FormItem>
                 )}
               />
@@ -102,7 +107,7 @@ const Login = () => {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-sm text-gray-700">
+                    <FormLabel className="text-sm font-medium text-gray-700">
                       Password
                     </FormLabel>
                     <FormControl>
@@ -110,10 +115,10 @@ const Login = () => {
                         type="password"
                         placeholder="Enter your password"
                         {...field}
-                        className="rounded-xl h-12 text-sm px-4 border-gray-300 focus:ring-2 focus:ring-purple-300"
+                        className="h-11 rounded-lg text-sm border-gray-300 focus:ring-2 focus:ring-yellow-400"
                       />
                     </FormControl>
-                    <FormMessage className="text-red-500 text-xs mt-1" />
+                    <FormMessage className="text-red-500 text-xs" />
                   </FormItem>
                 )}
               />
@@ -121,7 +126,7 @@ const Login = () => {
               <Button
                 type="submit"
                 disabled={isPending}
-                className={`w-full h-12 rounded-xl bg-pink-600 hover:bg-purple-700 text-white font-semibold shadow-md transition ${
+                className={`w-full h-12 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-semibold transition ${
                   isPending ? "opacity-60 cursor-not-allowed" : ""
                 }`}
               >
