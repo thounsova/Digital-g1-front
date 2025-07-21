@@ -2,22 +2,24 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import {
-  Download,
-  Phone,
-  Mail,
-  Globe,
-  MapPin,
-  Pencil,
-  Trash2,
-} from "lucide-react";
+import { Download, Phone, Mail, Globe, MapPin } from "lucide-react";
 
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import { Card, CardContent } from "../ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { ICard, User } from "@/app/types/card-type";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogTrigger,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+} from "../ui/alert-dialog";
 
+import { ICard, User } from "@/app/types/card-type";
 import QRCode from "react-qr-code";
 
 const MinimalCardServerSide = ({
@@ -30,6 +32,7 @@ const MinimalCardServerSide = ({
   idx: number;
 }) => {
   const [profileUrl, setProfileUrl] = useState("");
+  const [qrOpen, setQrOpen] = useState(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -98,7 +101,6 @@ const MinimalCardServerSide = ({
           backgroundPosition: "center",
         }}
       >
-        {/* Overlay Gradient */}
         <div className="absolute inset-0 bg-gradient-to-br from-sky-50/90 to-sky-100/70 z-0" />
 
         <CardContent className="p-8 space-y-8 relative z-10">
@@ -135,10 +137,26 @@ const MinimalCardServerSide = ({
           {/* Contact Info */}
           <div className="grid grid-cols-2 gap-5">
             {[
-              { icon: <Phone className="text-sky-600" />, label: "Phone", value: card.phone },
-              { icon: <Mail className="text-sky-600" />, label: "Email", value: me.email },
-              { icon: <Globe className="text-sky-600" />, label: "Website", value: card.web_site },
-              { icon: <MapPin className="text-sky-600" />, label: "Address", value: card.address },
+              {
+                icon: <Phone className="text-sky-600" />,
+                label: "Phone",
+                value: card.phone,
+              },
+              {
+                icon: <Mail className="text-sky-600" />,
+                label: "Email",
+                value: me.email,
+              },
+              {
+                icon: <Globe className="text-sky-600" />,
+                label: "Website",
+                value: card.web_site,
+              },
+              {
+                icon: <MapPin className="text-sky-600" />,
+                label: "Address",
+                value: card.address,
+              },
             ].map(({ icon, label, value }, i) => (
               <div
                 key={i}
@@ -153,12 +171,31 @@ const MinimalCardServerSide = ({
             ))}
           </div>
 
-          {/* QR Code */}
-          {profileUrl && (
-            <div className="flex justify-center bg-white p-4 rounded-xl shadow-md">
-              <QRCode value={profileUrl} size={128} />
-            </div>
-          )}
+          {/* Scan QR Code Button */}
+          <AlertDialog open={qrOpen} onOpenChange={setQrOpen}>
+            <AlertDialogTrigger asChild>
+              <Button className="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-semibold">
+                ស្កេន QR Code / Scan QR Code
+              </Button>
+            </AlertDialogTrigger>
+
+            <AlertDialogContent className="flex flex-col items-center justify-center space-y-4">
+              <AlertDialogHeader>
+                <AlertDialogTitle className="text-center">
+                  QR Code សម្រាប់ពាក់ព័ន្ធ / QR Code for Contact
+                </AlertDialogTitle>
+                <AlertDialogDescription className="text-center text-sm">
+                  ស្កេន QR Code នេះដើម្បីទាញយកពត៌មានបន្ថែម។
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <div className="bg-white p-4 rounded-xl shadow-md flex justify-center">
+                {profileUrl && <QRCode value={profileUrl} size={180} />}
+              </div>
+              <AlertDialogFooter>
+                <AlertDialogCancel>បិទ / Close</AlertDialogCancel>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
 
           {/* Download vCard */}
           <Button

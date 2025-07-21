@@ -50,12 +50,15 @@ const CorporateCard = ({
   const { DELETE_CARD } = cardRequest();
   const [showDialog, setShowDialog] = useState(false);
   const [profileUrl, setProfileUrl] = useState("");
+  const [qrOpen, setQrOpen] = useState(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      setProfileUrl(
-        `${window.location.origin}/profile/${me?.data.user_name || me?.data.id}`
-      );
+      const url = `${window.location.origin}/profile/${
+        me?.data.user_name || me?.data.id
+      }`;
+      console.log("QR Code URL:", url);
+      setProfileUrl(url);
     }
   }, [me]);
 
@@ -90,7 +93,7 @@ const CorporateCard = ({
     </div>
   );
 
-  // Helper to convert avatar image URL to base64
+  // Helper: convert avatar URL to base64 for vCard photo
   const toBase64 = async (url: string) => {
     try {
       const response = await fetch(url);
@@ -180,7 +183,10 @@ const CorporateCard = ({
             <div className="flex flex-col items-center gap-4">
               <div className="relative w-28 h-28 rounded-3xl bg-gradient-to-br from-yellow-400 via-pink-400 to-purple-400 rotate-12 flex items-center justify-center shadow-lg">
                 <Avatar className="w-28 h-28 border-4 border-white shadow-lg rotate-[-12deg]">
-                  <AvatarImage src={me?.data?.avatar} alt={me?.data?.user_name} />
+                  <AvatarImage
+                    src={me?.data?.avatar}
+                    alt={me?.data?.user_name}
+                  />
                   <AvatarFallback className="text-3xl font-semibold bg-gradient-to-br from-blue-500 to-purple-600 text-white">
                     {me?.data?.user_name?.slice(0, 2).toUpperCase()}
                   </AvatarFallback>
@@ -230,22 +236,31 @@ const CorporateCard = ({
               />
             </div>
 
-            {/* QR Code with label, background and clickable link */}
-            <div className="flex flex-col items-center mt-6">
-              <p className="mb-2 text-sm font-semibold text-pink-600">
-                Scan to view my profile
-              </p>
-              {profileUrl && (
-                <a href={profileUrl} target="_blank" rel="noopener noreferrer" className="bg-white p-3 rounded-lg shadow-lg inline-block">
-                  <QRCode
-                    value={profileUrl}
-                    size={128}
-                    bgColor="#ffffff"
-                    fgColor="#db2777" // pink color matching your theme
-                  />
-                </a>
-              )}
-            </div>
+            {/* Scan QR Code Button with modal */}
+            <AlertDialog open={qrOpen} onOpenChange={setQrOpen}>
+              <AlertDialogTrigger asChild>
+                <Button className="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-semibold">
+                  ស្កេន QR Code / Scan QR Code
+                </Button>
+              </AlertDialogTrigger>
+
+              <AlertDialogContent className="flex flex-col items-center justify-center space-y-4">
+                <AlertDialogHeader>
+                  <AlertDialogTitle className="text-center">
+                    QR Code សម្រាប់ពាក់ព័ន្ធ / QR Code for Contact
+                  </AlertDialogTitle>
+                  <AlertDialogDescription className="text-center text-sm">
+                    ស្កេន QR Code នេះដើម្បីទាញយកពត៌មានបន្ថែម។
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <div className="bg-white p-4 rounded-xl shadow-md flex justify-center">
+                  {profileUrl && <QRCode value={profileUrl} size={180} />}
+                </div>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>បិទ / Close</AlertDialogCancel>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
 
             {/* Download vCard */}
             <Button
@@ -282,9 +297,9 @@ const CorporateCard = ({
                 const url = window.URL.createObjectURL(blob);
                 const link = document.createElement("a");
                 link.href = url;
-                link.download = `${(me?.data.full_name ?? "Unnamed_User")
-                  .replace(/\s+/g, "_")
-                  }_${idx + 1}.vcf`;
+                link.download = `${(
+                  me?.data.full_name ?? "Unnamed_User"
+                ).replace(/\s+/g, "_")}_${idx + 1}.vcf`;
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
@@ -299,7 +314,7 @@ const CorporateCard = ({
               className="w-full bg-cyan-500 hover:bg-cyan-600 text-white font-semibold"
             >
               <Download className="w-4 h-4 mr-2" />
-              រក្សាទុកទំនាក់ទំនង
+              រក្សាទំនាក់ទំនង
             </Button>
 
             {/* Social Links */}

@@ -1,11 +1,24 @@
-import { Download, Globe, Mail, MapPin, Phone } from "lucide-react";
+"use client";
+
 import React, { useEffect, useState } from "react";
+import { Download, Globe, Mail, MapPin, Phone } from "lucide-react";
 import { Button } from "../ui/button";
 import { Card, CardContent } from "../ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import QRCode from "react-qr-code";
+
+import {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+} from "../ui/alert-dialog"; // ✅ Make sure this is the correct path to your UI library
 
 import { ICard, User } from "@/app/types/card-type";
-import QRCode from "react-qr-code";
 
 const ModernCardServerSide = ({
   me,
@@ -17,6 +30,7 @@ const ModernCardServerSide = ({
   idx: number;
 }) => {
   const [profileUrl, setProfileUrl] = useState("");
+  const [qrOpen, setQrOpen] = useState(false); // ✅ Dialog open state
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -26,20 +40,70 @@ const ModernCardServerSide = ({
     }
   }, [me]);
 
+  const handleDownloadVCard = async () => {
+    const toBase64 = async (url: string) => {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      return new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () =>
+          resolve(reader.result?.toString().split(",")[1] || "");
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+    };
+
+    const avatarBase64 = me?.avatar ? await toBase64(me.avatar) : "";
+
+    const vcard = [
+      "BEGIN:VCARD",
+      "VERSION:3.0",
+      `FN:${me?.full_name}`,
+      `N:${me?.full_name};;;;`,
+      `ORG:${card.company}`,
+      `TITLE:${card.job}`,
+      `TEL;TYPE=WORK,VOICE:${card.phone}`,
+      `EMAIL;TYPE=PREF,INTERNET:${me?.email}`,
+      avatarBase64 ? `PHOTO;ENCODING=b;TYPE=JPEG:${avatarBase64}` : "",
+      `URL:${card.web_site}`,
+      `ADR;TYPE=WORK:;;${card.address};;;;`,
+      `NOTE:${card.bio}`,
+      "END:VCARD",
+    ]
+      .filter(Boolean)
+      .join("\r\n");
+
+    const blob = new Blob([vcard], {
+      type: "text/vcard;charset=utf-8",
+    });
+
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${(me?.full_name ?? "Unnamed_User").replace(
+      /\s+/g,
+      "_"
+    )}_${idx + 1}.vcf`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="max-w-sm mx-auto relative mt-10">
       <Card
-        className="relative border-2 border-pink-500 shadow-xl rounded-3xl overflow-hidden bg-fit bg-center"
+        className="relative border-2 border-pink-500 shadow-xl rounded-3xl overflow-hidden"
         style={{
           backgroundImage:
             "url('https://i.pinimg.com/originals/b8/26/1f/b8261f0163fff2cc01c5cb1159d4767b.gif')",
+          backgroundSize: "cover",
         }}
       >
-        {/* Gradient overlay for text readability */}
         <div className="absolute inset-0 bg-gradient-to-br from-white/80 via-pink-100/60 to-purple-100/70 z-0" />
 
         <CardContent className="relative z-10 p-8 space-y-8">
-          {/* Avatar, Name, Job */}
+          {/* Avatar & Name */}
           <div className="flex flex-col items-center gap-4">
             <div className="relative w-28 h-28 rounded-3xl bg-gradient-to-br from-yellow-400 via-pink-400 to-purple-400 rotate-12 flex items-center justify-center shadow-lg">
               <Avatar className="w-28 h-28 border-4 border-white shadow-lg rotate-[-12deg]">
@@ -57,9 +121,9 @@ const ModernCardServerSide = ({
             </p>
           </div>
 
-          {/* Company Badge */}
+          {/* Company */}
           <div className="flex justify-center">
-            <div className="bg-yellow-200 text-yellow-800 border-0 px-4 py-2 rounded-full text-sm shadow-md">
+            <div className="bg-yellow-200 text-yellow-800 px-4 py-2 rounded-full text-sm shadow-md">
               {card.company || "N/A"}
             </div>
           </div>
@@ -69,7 +133,7 @@ const ModernCardServerSide = ({
             {card.bio || "No bio provided."}
           </p>
 
-          {/* Contact Info Grid */}
+          {/* Contact Info */}
           <div className="grid grid-cols-2 gap-5">
             {[
               {
@@ -106,70 +170,34 @@ const ModernCardServerSide = ({
             ))}
           </div>
 
-          {/* QR Code Section */}
-          {profileUrl && (
-            <div className="flex flex-col items-center mt-6">
-              <div className="bg-white p-2 rounded-md shadow-md">
-                <QRCode value={profileUrl} size={128} />
+          {/* QR Code Dialog */}
+          <AlertDialog open={qrOpen} onOpenChange={setQrOpen}>
+            <AlertDialogTrigger asChild>
+              <Button className="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-semibold">
+                ស្កេន QR Code / Scan QR Code
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent className="flex flex-col items-center justify-center space-y-4">
+              <AlertDialogHeader>
+                <AlertDialogTitle className="text-center">
+                  QR Code សម្រាប់ពាក់ព័ន្ធ / QR Code for Contact
+                </AlertDialogTitle>
+                <AlertDialogDescription className="text-center text-sm">
+                  ស្កេន QR Code នេះដើម្បីទាញយកពត៌មានបន្ថែម។
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <div className="bg-white p-4 rounded-xl shadow-md">
+                {profileUrl && <QRCode value={profileUrl} size={180} />}
               </div>
-              <p className="mt-2 text-gray-700 text-sm select-none">
-                Scan to view profile
-              </p>
-            </div>
-          )}
+              <AlertDialogFooter>
+                <AlertDialogCancel>បិទ / Close</AlertDialogCancel>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
 
-          {/* Download vCard Button */}
+          {/* Download Contact */}
           <Button
-            onClick={async () => {
-              const toBase64 = async (url: string) => {
-                const response = await fetch(url);
-                const blob = await response.blob();
-                return new Promise<string>((resolve, reject) => {
-                  const reader = new FileReader();
-                  reader.onloadend = () =>
-                    resolve(reader.result?.toString().split(",")[1] || "");
-                  reader.onerror = reject;
-                  reader.readAsDataURL(blob);
-                });
-              };
-
-              const avatarBase64 = me?.avatar ? await toBase64(me.avatar) : "";
-
-              const vcard = [
-                "BEGIN:VCARD",
-                "VERSION:3.0",
-                `FN:${me?.full_name}`,
-                `N:${me?.full_name};;;;`,
-                `ORG:${card.company}`,
-                `TITLE:${card.job}`,
-                `TEL;TYPE=WORK,VOICE:${card.phone}`,
-                `EMAIL;TYPE=PREF,INTERNET:${me?.email}`,
-                avatarBase64
-                  ? `PHOTO;ENCODING=b;TYPE=JPEG:${avatarBase64}`
-                  : "",
-                `URL:${card.web_site}`,
-                `ADR;TYPE=WORK:;;${card.address};;;;`,
-                `NOTE:${card.bio}`,
-                "END:VCARD",
-              ]
-                .filter(Boolean)
-                .join("\r\n");
-
-              const blob = new Blob([vcard], {
-                type: "text/vcard;charset=utf-8",
-              });
-
-              const url = window.URL.createObjectURL(blob);
-              const link = document.createElement("a");
-              link.href = url;
-              link.download = `${(me?.full_name ?? "Unnamed_User")
-                .replace(/\s+/g, "_")
-                }_${idx + 1}.vcf`;
-              document.body.appendChild(link);
-              link.click();
-              document.body.removeChild(link);
-              window.URL.revokeObjectURL(url);
-            }}
+            onClick={handleDownloadVCard}
             className="w-full bg-cyan-500 hover:bg-cyan-600 text-white font-semibold"
           >
             <Download className="w-4 h-4 mr-2" />

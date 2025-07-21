@@ -12,6 +12,7 @@ import {
   MapPin,
   Pencil,
   Trash2,
+  QrCode,
 } from "lucide-react";
 import { Button } from "../ui/button";
 import { Card, CardContent } from "../ui/card";
@@ -116,7 +117,9 @@ const CorporateCard = ({
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `${me?.data.full_name?.replace(/\s+/g, "_")}_${idx + 1}.vcf`;
+    link.download = `${me?.data.full_name?.replace(/\s+/g, "_")}_${
+      idx + 1
+    }.vcf`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -138,7 +141,6 @@ const CorporateCard = ({
             "url('https://i.pinimg.com/originals/f6/24/43/f624433ba377e1410da5dc346e7669c0.gif')",
         }}
       >
-        {/* Gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-br from-red-800/90 via-orange-700/80 to-yellow-600/70 z-0" />
 
         <div className="relative z-10">
@@ -167,11 +169,14 @@ const CorporateCard = ({
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle>បញ្ចាក់ / Confirm Deletion</AlertDialogTitle>
+                  <AlertDialogTitle>
+                    បញ្ចាក់ / Confirm Deletion
+                  </AlertDialogTitle>
                   <AlertDialogDescription className="text-sm leading-relaxed">
                     តើអ្នកពិតជាចង់លុបកាតនេះមែនទេ? វានឹងបាត់ទៅជាអចិន្ត្រៃយ៍។
                     <br />
-                    Are you sure you want to delete this card? This action cannot be undone.
+                    Are you sure you want to delete this card? This action
+                    cannot be undone.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
@@ -192,7 +197,10 @@ const CorporateCard = ({
             <div className="flex flex-col items-center gap-5">
               <div className="relative w-28 h-28 rounded-3xl bg-gradient-to-tr from-red-700 via-orange-500 to-yellow-400 rotate-12 flex items-center justify-center shadow-xl">
                 <Avatar className="w-28 h-28 border-4 border-white shadow-lg rotate-[-12deg]">
-                  <AvatarImage src={me?.data?.avatar} alt={me?.data?.user_name} />
+                  <AvatarImage
+                    src={me?.data?.avatar}
+                    alt={me?.data?.user_name}
+                  />
                   <AvatarFallback className="text-3xl font-semibold bg-gradient-to-br from-orange-600 to-red-700 text-white">
                     {me?.data?.user_name?.slice(0, 2).toUpperCase()}
                   </AvatarFallback>
@@ -239,11 +247,33 @@ const CorporateCard = ({
               />
             </div>
 
-            {/* QR Code Section */}
+            {/* Scan QR Code Button with Modal */}
             {profileUrl && (
-              <div className="flex justify-center my-6  p-4 rounded-lg shadow-md">
-                <QRCode value={profileUrl} size={128} />
-              </div>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button className="w-full bg-gradient-to-r from-red-600 via-orange-500 to-yellow-400 hover:scale-105 transition-transform text-white shadow-lg font-semibold">
+                    <QrCode className="w-5 h-5 mr-2" />
+                    Scan QR Code
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent className="max-w-sm bg-white text-center">
+                  <AlertDialogHeader>
+                    <AlertDialogTitle className="text-lg font-bold text-gray-800">
+                      Scan to View Profile
+                    </AlertDialogTitle>
+                    <AlertDialogDescription className="text-gray-600 mb-4">
+                      Use your phone camera or QR scanner app to open the
+                      profile.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <div className="flex justify-center py-4">
+                    <QRCode value={profileUrl} size={200} />
+                  </div>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Close</AlertDialogCancel>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             )}
 
             <Button
@@ -299,7 +329,9 @@ const ContactBox = ({
       {icon}
       <span>{label}</span>
     </div>
-    <div className="text-white break-words text-sm font-light">{value || "-"}</div>
+    <div className="text-white break-words text-sm font-light">
+      {value || "-"}
+    </div>
   </div>
 );
 

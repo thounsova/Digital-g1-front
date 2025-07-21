@@ -1,10 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { Card, CardContent } from "../ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { Badge, Download, Globe, Mail, MapPin, Phone } from "lucide-react";
+import {
+  Badge,
+  Download,
+  Globe,
+  Mail,
+  MapPin,
+  Phone,
+  QrCode,
+} from "lucide-react";
 import { Button } from "../ui/button";
 import { User, ICard } from "@/app/types/card-type";
-
 import QRCode from "react-qr-code";
 
 const CorporateCardService = ({
@@ -17,6 +24,7 @@ const CorporateCardService = ({
   idx: number;
 }) => {
   const [profileUrl, setProfileUrl] = useState("");
+  const [showQR, setShowQR] = useState(false); // for modal toggle
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -33,9 +41,7 @@ const CorporateCardService = ({
             "url('https://i.pinimg.com/originals/f6/24/43/f624433ba377e1410da5dc346e7669c0.gif')",
         }}
       >
-        {/* Fire-themed overlay */}
         <div className="absolute inset-0 bg-gradient-to-br from-red-900/80 via-orange-800/70 to-yellow-700/60 z-0 rounded-2xl" />
-
         <div className="relative z-10">
           {/* Header */}
           <div className="flex flex-col items-center gap-4 p-6">
@@ -47,11 +53,9 @@ const CorporateCardService = ({
                 </AvatarFallback>
               </Avatar>
             </div>
-
             <h1 className="text-2xl font-extrabold text-white text-center drop-shadow-md">
               {me?.full_name}
             </h1>
-
             <p className="text-sm text-white bg-gradient-to-r from-red-600 via-orange-600 to-yellow-500 px-4 py-1 rounded-full font-semibold tracking-wide text-center max-w-xs drop-shadow">
               {card.job}
             </p>
@@ -73,19 +77,27 @@ const CorporateCardService = ({
 
           {/* Contact Grid */}
           <div className="px-6 grid grid-cols-2 gap-4 text-sm font-medium text-white mb-6">
-            <ContactBox icon={<Phone className="text-yellow-400" />} label="Phone" value={card.phone} />
-            <ContactBox icon={<Mail className="text-orange-400" />} label="Email" value={me?.email} />
-            <ContactBox icon={<Globe className="text-red-400" />} label="Website" value={card.web_site} />
-            <ContactBox icon={<MapPin className="text-yellow-500" />} label="Address" value={card.address} />
+            <ContactBox
+              icon={<Phone className="text-yellow-400" />}
+              label="Phone"
+              value={card.phone}
+            />
+            <ContactBox
+              icon={<Mail className="text-orange-400" />}
+              label="Email"
+              value={me?.email}
+            />
+            <ContactBox
+              icon={<Globe className="text-red-400" />}
+              label="Website"
+              value={card.web_site}
+            />
+            <ContactBox
+              icon={<MapPin className="text-yellow-500" />}
+              label="Address"
+              value={card.address}
+            />
           </div>
-
-          {/* QR Code */}
-          {profileUrl && (
-            <div className="flex justify-center my-6  p-4 rounded-lg shadow-md">
-                <QRCode value={profileUrl} size={128} />
-            
-              </div>
-          )}
 
           {/* Action Buttons */}
           <div className="px-6 mb-6 space-y-3">
@@ -103,7 +115,9 @@ const CorporateCardService = ({
                   });
                 };
 
-                const avatarBase64 = me?.avatar ? await toBase64(me.avatar) : "";
+                const avatarBase64 = me?.avatar
+                  ? await toBase64(me.avatar)
+                  : "";
 
                 const vcard = [
                   "BEGIN:VCARD",
@@ -114,7 +128,9 @@ const CorporateCardService = ({
                   `TITLE:${card.job}`,
                   `TEL;TYPE=WORK,VOICE:${card.phone}`,
                   `EMAIL;TYPE=PREF,INTERNET:${me?.email}`,
-                  avatarBase64 ? `PHOTO;ENCODING=b;TYPE=JPEG:${avatarBase64}` : "",
+                  avatarBase64
+                    ? `PHOTO;ENCODING=b;TYPE=JPEG:${avatarBase64}`
+                    : "",
                   `URL:${card.web_site}`,
                   `ADR;TYPE=WORK:;;${card.address};;;;`,
                   `NOTE:${card.bio}`,
@@ -123,11 +139,16 @@ const CorporateCardService = ({
                   .filter(Boolean)
                   .join("\r\n");
 
-                const blob = new Blob([vcard], { type: "text/vcard;charset=utf-8" });
+                const blob = new Blob([vcard], {
+                  type: "text/vcard;charset=utf-8",
+                });
                 const url = window.URL.createObjectURL(blob);
                 const link = document.createElement("a");
                 link.href = url;
-                link.download = `${(me?.full_name ?? "Unnamed_User").replace(" ", "_")}_${idx + 1}.vcf`;
+                link.download = `${(me?.full_name ?? "Unnamed_User").replace(
+                  " ",
+                  "_"
+                )}_${idx + 1}.vcf`;
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
@@ -139,6 +160,17 @@ const CorporateCardService = ({
               Save My Contact
             </Button>
 
+            {/* QR Button */}
+            <Button
+              variant="outline"
+              onClick={() => setShowQR(true)}
+              className="w-full text-white bg-gradient-to-r from-red-600 via-orange-600 to-yellow-500 hover:scale-105 transition-transform shadow"
+            >
+              <QrCode className="w-4 h-4 mr-2" />
+              Scan QR Code
+            </Button>
+
+            {/* Social Buttons */}
             {card.socialLinks?.length > 0 && (
               <div className="space-y-2">
                 {card.socialLinks.map((res, idx) => (
@@ -162,6 +194,30 @@ const CorporateCardService = ({
           </div>
         </div>
       </Card>
+
+      {/* QR Code Modal */}
+      {showQR && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="relative bg-white w-[90%] max-w-sm p-6 rounded-2xl shadow-xl flex flex-col items-center">
+            <button
+              onClick={() => setShowQR(false)}
+              className="absolute top-3 right-3 text-gray-500 hover:text-red-600 text-xl font-bold"
+              aria-label="Close QR Modal"
+            >
+              ×
+            </button>
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">
+              Scan this QR Code
+            </h2>
+            <div className="p-4 bg-white border border-gray-200 rounded-xl">
+              <QRCode value={profileUrl} size={160} />
+            </div>
+            <p className="text-xs text-gray-500 mt-3">
+              Point your camera to scan this card
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

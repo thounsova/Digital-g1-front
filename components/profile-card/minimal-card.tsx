@@ -51,6 +51,7 @@ const CorporateCard = ({
 }: CorporateCardProps) => {
   const { DELETE_CARD } = cardRequest();
   const [open, setOpen] = useState(false);
+  const [qrOpen, setQrOpen] = useState(false);
   const [profileUrl, setProfileUrl] = useState("");
 
   useEffect(() => {
@@ -102,7 +103,8 @@ const CorporateCard = ({
       <Card
         className="relative border-2 border-sky-400 shadow-lg rounded-3xl overflow-hidden"
         style={{
-          backgroundImage: `url('https://dl.glitter-graphics.com/pub/3726/3726241zrr27qexjc.gif')`,
+          backgroundImage:
+            "url('https://dl.glitter-graphics.com/pub/3726/3726241zrr27qexjc.gif')",
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
@@ -217,12 +219,31 @@ const CorporateCard = ({
             />
           </div>
 
-          {/* QR Code */}
-          {profileUrl && (
-            <div className="bg-white p-4 rounded-xl shadow-md flex justify-center">
-              <QRCode value={profileUrl} size={128} />
-            </div>
-          )}
+          {/* Scan QR Code Button with modal */}
+          <AlertDialog open={qrOpen} onOpenChange={setQrOpen}>
+            <AlertDialogTrigger asChild>
+              <Button className="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-semibold">
+                ស្កេន QR Code / Scan QR Code
+              </Button>
+            </AlertDialogTrigger>
+
+            <AlertDialogContent className="flex flex-col items-center justify-center space-y-4">
+              <AlertDialogHeader>
+                <AlertDialogTitle className="text-center">
+                  QR Code សម្រាប់ពាក់ព័ន្ធ / QR Code for Contact
+                </AlertDialogTitle>
+                <AlertDialogDescription className="text-center text-sm">
+                  ស្កេន QR Code នេះដើម្បីទាញយកពត៌មានបន្ថែម។
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <div className="bg-white p-4 rounded-xl shadow-md flex justify-center">
+                {profileUrl && <QRCode value={profileUrl} size={180} />}
+              </div>
+              <AlertDialogFooter>
+                <AlertDialogCancel>បិទ / Close</AlertDialogCancel>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
 
           {/* Download vCard */}
           <Button
