@@ -72,8 +72,8 @@ export default function ProfilePage() {
 
   if (showLoading)
     return (
-      <div className="flex justify-center mt-64 items-center py-20">
-        <div className="w-96 h-96 ">
+      <div className="flex justify-center mt-36 items-center py-20">
+        <div className="w-96 h-52 ">
           <img
             src="https://mir-s3-cdn-cf.behance.net/project_modules/fs/21618192445957.5e4bc54becda4.gif"
             alt="Loading"
