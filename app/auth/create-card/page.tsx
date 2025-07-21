@@ -88,7 +88,9 @@ export default function CreateCardForm() {
     name: "social",
   });
 
-  const [socialIcons, setSocialIcons] = useState<Record<number, File | null>>({});
+  const [socialIcons, setSocialIcons] = useState<Record<number, File | null>>(
+    {}
+  );
   const [iconPreviews, setIconPreviews] = useState<Record<number, string>>({});
 
   const isValidImage = (file: File) => {
@@ -101,10 +103,13 @@ export default function CreateCardForm() {
     const formData = new FormData();
     formData.append("image", file);
 
-    const res = await fetch("http://localhost:8000/api/v1/upload/upload-image", {
-      method: "POST",
-      body: formData,
-    });
+    const res = await fetch(
+      "http://localhost:8000/api/v1/upload/upload-image",
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
 
     if (!res.ok) {
       throw new Error("Image upload failed");
@@ -166,7 +171,11 @@ export default function CreateCardForm() {
         </h1>
 
         <Form {...form}>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-8" noValidate>
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="space-y-8"
+            noValidate
+          >
             {/* Card Type & Gender */}
             <div className="grid grid-cols-2 gap-6">
               <FormField
@@ -438,12 +447,13 @@ export default function CreateCardForm() {
                         <AvatarImage src={iconPreviews[idx]} alt="Icon" />
                       ) : (
                         <AvatarFallback>
-                          {watch(`social.${idx}.platform`)?.[0]?.toUpperCase() || "?"}
+                          {watch(
+                            `social.${idx}.platform`
+                          )?.[0]?.toUpperCase() || "?"}
                         </AvatarFallback>
                       )}
                     </Avatar>
-                    <span className="text-sm text-orange-600 underline font-semibold">
-                    </span>
+                    <span className="text-sm text-orange-600 underline font-semibold"></span>
                   </label>
                   <input
                     type="file"
@@ -523,7 +533,7 @@ export default function CreateCardForm() {
             <div className="flex flex-col-12 sm:flex-row justify-center gap-4 pt-4">
               <Button
                 type="submit"
-                className="w-40 sm:w-40 bg-orange-600 hover:bg-orange-700 text-white font-semibold py-3 rounded-xl shadow-lg transition duration-200 disabled:opacity-50"
+                className="w-32 sm:w-40 bg-orange-600 hover:bg-orange-700 text-white font-semibold py-3 rounded-xl shadow-lg transition duration-200 disabled:opacity-50"
                 disabled={createCardMutation.isPending}
               >
                 {createCardMutation.isPending ? "Creating..." : "Create Card"}
@@ -532,7 +542,7 @@ export default function CreateCardForm() {
               <Button
                 type="button"
                 variant="outline"
-                className="w-40 sm:w-40 border-orange-400 text-orange-600 hover:bg-orange-100 font-semibold py-3 rounded-xl shadow"
+                className="w-32 sm:w-40 border-orange-400 text-orange-600 hover:bg-orange-100 font-semibold py-3 rounded-xl shadow"
                 onClick={() => router.back()}
               >
                 Back

@@ -114,7 +114,9 @@ export default function ProfileForm({
     name: "social",
   });
 
-  const [socialIcons, setSocialIcons] = useState<Record<number, File | null>>({});
+  const [socialIcons, setSocialIcons] = useState<Record<number, File | null>>(
+    {}
+  );
   const [iconPreviews, setIconPreviews] = useState<Record<number, string>>({});
   const [avatarPreview, setAvatarPreview] = useState<string>("");
 
@@ -168,10 +170,13 @@ export default function ProfileForm({
       const formData = new FormData();
       const blob = await fetch(avatarPreview).then((r) => r.blob());
       formData.append("image", blob);
-      const res = await fetch("http://localhost:8000/api/v1/upload/upload-image", {
-        method: "POST",
-        body: formData,
-      });
+      const res = await fetch(
+        "http://localhost:8000/api/v1/upload/upload-image",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
       const data = await res.json();
       avatarUrl = data.url;
     }
@@ -182,10 +187,13 @@ export default function ProfileForm({
         if (file) {
           const formData = new FormData();
           formData.append("image", file);
-          const res = await fetch("http://localhost:8000/api/v1/upload/upload-image", {
-            method: "POST",
-            body: formData,
-          });
+          const res = await fetch(
+            "http://localhost:8000/api/v1/upload/upload-image",
+            {
+              method: "POST",
+              body: formData,
+            }
+          );
           const data = await res.json();
           return { ...item, icon: data.url };
         }
@@ -554,23 +562,23 @@ export default function ProfileForm({
             </div>
 
             {/* Submit Button */}
-          <div className="flex flex-col-12 sm:flex-row justify-center gap-4 pt-4">
-            <Button
-              type="submit"
-              className="w-40 bg-orange-600 hover:bg-orange-700 focus:ring-4 focus:ring-orange-400 font-semibold transition"
-              disabled={updateCardMutation.isPending}
-            >
-              {updateCardMutation.isPending ? "Updating..." : "Update Card"}
-            </Button>
-  <Button
-     type="button"
-     variant="outline"
-     className="w-40 sm:w-40 border-orange-400 text-pink-600 hover:bg-pink-100 font-semibold py-3 rounded-xl shadow"
-     onClick={() => router.back()}
-   >
-     Back
-   </Button>
-  </div>
+            <div className="flex flex-col-12 sm:flex-row justify-center gap-4 pt-4">
+              <Button
+                type="submit"
+                className="w-40 bg-orange-600 hover:bg-orange-700 focus:ring-4 focus:ring-orange-400 font-semibold transition"
+                disabled={updateCardMutation.isPending}
+              >
+                {updateCardMutation.isPending ? "Updating..." : "Update Card"}
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                className="w-40 sm:w-40 border-orange-400 text-pink-600 hover:bg-pink-100 font-semibold py-3 rounded-xl shadow"
+                onClick={() => router.back()}
+              >
+                Back
+              </Button>
+            </div>
           </form>
         </Form>
       </div>

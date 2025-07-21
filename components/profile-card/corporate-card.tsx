@@ -133,7 +133,7 @@ const CorporateCard = ({
   };
 
   return (
-    <div className="max-w-sm mx-auto px-4 py-6">
+    <div className="w-full max-w-sm mx-auto px-4 py-6">
       <Card
         className="relative border border-yellow-400 shadow-2xl overflow-hidden bg-cover bg-center rounded-xl"
         style={{

@@ -99,7 +99,7 @@ const CorporateCard = ({
   };
 
   return (
-    <div className="max-w-sm mx-auto relative">
+    <div className="w-full max-w-sm mx-auto relative">
       <Card
         className="relative border-2 border-sky-400 shadow-lg rounded-3xl overflow-hidden"
         style={{

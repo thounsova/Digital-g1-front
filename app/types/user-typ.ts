@@ -2,18 +2,17 @@ import { CardItem } from "./card-type";
 
 export interface IUser {
   message: string;
-   me?: IUser;
+  me?: IUser;
   data: UserData;
   avatar?: string;
   isLoading?: string;
-    cover : string;
-
-
+  cover: string;
 }
 
 export interface UserData {
   id: string;
-  cover : string;
+  cover: string;
+  cover_image?: string; //
   full_name?: string;
   user_name: string;
   email: string;

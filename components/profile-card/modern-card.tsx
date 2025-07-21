@@ -111,9 +111,9 @@ const CorporateCard = ({
   };
 
   return (
-    <div className="max-w-sm mx-auto relative">
+    <div className="w-full max-w-sm mx-auto  relative">
       <Card
-        className="relative border-2 border-pink-500 shadow-xl rounded-3xl overflow-hidden bg-fit bg-center"
+        className="relative border-2  border-pink-500 shadow-xl rounded-3xl overflow-hidden bg-fit bg-center"
         style={{
           backgroundImage: `url('https://i.pinimg.com/originals/b8/26/1f/b8261f0163fff2cc01c5cb1159d4767b.gif')`,
         }}
@@ -125,7 +125,7 @@ const CorporateCard = ({
           {/* Edit Button */}
           <Link
             href={`/auth/update-card/${card.id}`}
-            className="absolute top-3 right-3 z-20"
+            className="absolute  right-3 z-20"
             aria-label="Edit card"
           >
             <Button
@@ -144,7 +144,7 @@ const CorporateCard = ({
               <Button
                 size="icon"
                 variant="ghost"
-                className="text-pink-600 border-pink-400 absolute top-3 left-3 z-20 bg-white hover:bg-pink-100"
+                className="text-pink-600 border-pink-400 absolute  left-3 z-20 bg-white hover:bg-pink-100"
                 title="Delete card"
                 aria-label="Delete card"
               >

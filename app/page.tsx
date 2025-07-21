@@ -87,11 +87,15 @@ export default function ProfilePage() {
       <div className="w-full max-w-sm mx-auto bg-white/80 shadow-lg backdrop-blur overflow-hidden mb-8 border border-orange-200">
         {/* Header */}
         <div className="relative h-36 bg-gradient-to-r from-orange-300 to-yellow-400">
-          <img
-            src="https://design4users.com/wp-content/uploads/2021/05/mastercard-logo-concept.gif"
-            alt="Banner"
-            className="h-full w-full object-cover"
-          />
+          {me?.data?.cover_image ? (
+            <img
+              src={me.data.cover_image}
+              alt="Cover"
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <div className="h-full w-full bg-gradient-to-r from-orange-300 to-yellow-400" />
+          )}
           <div className="absolute inset-0 bg-black/10" />
           <Button
             variant="ghost"
