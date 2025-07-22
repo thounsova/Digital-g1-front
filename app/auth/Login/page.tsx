@@ -1,14 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
-
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Form,
   FormControl,
@@ -17,26 +9,29 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-
+import { Input } from "@/components/ui/input";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import z from "zod";
+import { useMutation } from "@tanstack/react-query";
 import { authRequest } from "@/lib/api/auth-api";
 import { AuthLoginType } from "@/app/types/auth";
-import { useAuthStore } from "@/app/Store/authStore";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
-// --- Form validation schema
 const LoginSchema = z.object({
-  user_name: z.string().min(2, { message: "Username is required" }),
-  password: z.string().min(2, { message: "Password is required" }),
+  user_name: z.string().min(2, {
+    message: "Username must be at least 2 characters.",
+  }),
+  password: z.string().min(2, {
+    message: "Password must be at least 2 characters.",
+  }),
 });
 
 const Login = () => {
   const router = useRouter();
   const { AUTH_LOGIN } = authRequest();
 
-  // Zustand store setter and boolean property (getter)
-  const setTokens = useAuthStore((state) => state.setTokens);
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-
-  // React Hook Form
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
@@ -44,45 +39,32 @@ const Login = () => {
       password: "",
     },
   });
+  useEffect(() => {});
 
-  // React Query mutation for login
-  const loginMutation = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationKey: ["login"],
     mutationFn: (payload: AuthLoginType) => AUTH_LOGIN(payload),
     onSuccess: (data) => {
-      const { accessToken, refreshToken } = data.data || {};
-      if (accessToken && refreshToken) {
-        setTokens(accessToken, refreshToken);
+      if (data) {
         router.push("/");
       }
     },
-    onError: (err) => {
-      console.error("Login failed:", err);
-    },
   });
 
-  // Redirect if already authenticated
-  useEffect(() => {
-    if (isAuthenticated) {
-      router.push("/");
-    }
-  }, [isAuthenticated, router]);
-
-  // Form submit handler
-  const onSubmit = (values: z.infer<typeof LoginSchema>) => {
-    loginMutation.mutate(values);
+  const onSubmit = (data: z.infer<typeof LoginSchema>) => {
+    mutate(data);
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-yellow-100 via-orange-100 to-white px-4">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-md p-6 sm:p-8">
+      <div className="w-full max-w-md bg-white shadow-md rounded-2xl p-6 sm:p-8">
         <div className="text-center mb-6">
           <h2 className="text-2xl font-bold text-orange-600">Welcome Back!</h2>
           <p className="text-sm text-gray-600 mt-1">
             Don&apos;t have an account?{" "}
             <a
               href="/auth/Register"
-              className="text-orange-500 hover:underline font-medium"
+              className="text-orange-500 font-medium hover:underline"
             >
               Register now
             </a>
@@ -106,7 +88,7 @@ const Login = () => {
                       className="h-11 rounded-md text-sm border-gray-300 focus:ring-2 focus:ring-yellow-400"
                     />
                   </FormControl>
-                  <FormMessage className="text-red-500 text-xs mt-1" />
+                  <FormMessage className="text-red-500 text-xs" />
                 </FormItem>
               )}
             />
@@ -127,19 +109,19 @@ const Login = () => {
                       className="h-11 rounded-md text-sm border-gray-300 focus:ring-2 focus:ring-yellow-400"
                     />
                   </FormControl>
-                  <FormMessage className="text-red-500 text-xs mt-1" />
+                  <FormMessage className="text-red-500 text-xs" />
                 </FormItem>
               )}
             />
 
             <Button
               type="submit"
-              disabled={loginMutation.isPending}
+              disabled={isPending}
               className={`w-full h-12 rounded-md bg-orange-500 hover:bg-orange-600 text-white font-semibold transition ${
-                loginMutation.isPending ? "opacity-60 cursor-not-allowed" : ""
+                isPending ? "opacity-60 cursor-not-allowed" : ""
               }`}
             >
-              {loginMutation.isPending ? "Logging in..." : "Login"}
+              {isPending ? "Logging in..." : "Login"}
             </Button>
           </form>
         </Form>
