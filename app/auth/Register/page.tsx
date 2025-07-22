@@ -79,122 +79,117 @@ const Register = () => {
   }, [fetchDeviceInfo]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-100 via-orange-100 flex items-center justify-center px-4">
-      <div className="w-full max-w-4xl bg-white/80 backdrop-blur-md rounded-3xl shadow-2xl overflow-hidden grid grid-cols-1 md:grid-cols-2 border border-pink-200">
-        {/* Left Side - Welcome */}
-        <div className="bg-gradient-to-tr from-orange-400 to-orange-500 text-white flex flex-col items-center justify-center p-8 space-y-4">
-          <h2 className="text-3xl font-bold">Welcome Aboard! </h2>
-          <p className="text-sm text-center max-w-[80%]">
-            Already have an account? Let's go sign in!
-          </p>
-          <a href="/auth/Login">
-            <button className="bg-white text-purple-600 hover:bg-pink-100 px-6 py-2 rounded-full text-sm font-semibold shadow transition-all">
+    <div className="min-h-screen bg-gradient-to-br from-yellow-100 via-orange-100 to-white flex items-center justify-center px-4">
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-6 sm:p-8">
+        {/* Welcome message */}
+        <div className="text-center mb-6">
+          <h2 className="text-2xl font-bold text-orange-600">
+            Welcome Aboard!
+          </h2>
+          <p className="text-sm text-gray-600 mt-2">
+            Already have an account?{" "}
+            <a
+              href="/auth/Login"
+              className="text-orange-500 font-medium hover:underline"
+            >
               Login
-            </button>
-          </a>
+            </a>
+          </p>
         </div>
 
-        {/* Right Side - Form */}
-        <div className="p-8 md:p-10 bg-white">
-          <h3 className="text-2xl font-semibold text-orange-700 mb-6 text-center">
-            Create Your Account
-          </h3>
+        {/* Form */}
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+            <FormField
+              control={form.control}
+              name="user_name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-sm text-gray-700">
+                    Username
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Choose a username"
+                      {...field}
+                      className="h-12 rounded-md px-4 text-sm border-gray-300 focus:ring-2 focus:ring-yellow-400"
+                    />
+                  </FormControl>
+                  <FormMessage className="text-red-500 text-xs mt-1" />
+                </FormItem>
+              )}
+            />
 
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-              <FormField
-                control={form.control}
-                name="user_name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-sm text-gray-700">
-                      Username
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Choose a username"
-                        {...field}
-                        className="rounded-xl h-12 px-4 text-sm border-gray-300 focus:ring-2 focus:ring-purple-300"
-                      />
-                    </FormControl>
-                    <FormMessage className="text-red-500 text-xs mt-1" />
-                  </FormItem>
-                )}
-              />
+            <FormField
+              control={form.control}
+              name="full_name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-sm text-gray-700">
+                    Full Name
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Your full name"
+                      {...field}
+                      className="h-12 rounded-md px-4 text-sm border-gray-300 focus:ring-2 focus:ring-yellow-400"
+                    />
+                  </FormControl>
+                  <FormMessage className="text-red-500 text-xs mt-1" />
+                </FormItem>
+              )}
+            />
 
-              <FormField
-                control={form.control}
-                name="full_name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-sm text-gray-700">
-                      Full Name
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Your full name"
-                        {...field}
-                        className="rounded-xl h-12 px-4 text-sm border-gray-300 focus:ring-2 focus:ring-purple-300"
-                      />
-                    </FormControl>
-                    <FormMessage className="text-red-500 text-xs mt-1" />
-                  </FormItem>
-                )}
-              />
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-sm text-gray-700">Email</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="you@example.com"
+                      {...field}
+                      className="h-12 rounded-md px-4 text-sm border-gray-300 focus:ring-2 focus:ring-yellow-400"
+                    />
+                  </FormControl>
+                  <FormMessage className="text-red-500 text-xs mt-1" />
+                </FormItem>
+              )}
+            />
 
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-sm text-gray-700">
-                      Email
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="you@example.com"
-                        {...field}
-                        className="rounded-xl h-12 px-4 text-sm border-gray-300 focus:ring-2 focus:ring-purple-300"
-                      />
-                    </FormControl>
-                    <FormMessage className="text-red-500 text-xs mt-1" />
-                  </FormItem>
-                )}
-              />
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-sm text-gray-700">
+                    Password
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type="password"
+                      placeholder="Create a password"
+                      {...field}
+                      className="h-12 rounded-md px-4 text-sm border-gray-300 focus:ring-2 focus:ring-yellow-400"
+                    />
+                  </FormControl>
+                  <FormMessage className="text-red-500 text-xs mt-1" />
+                </FormItem>
+              )}
+            />
 
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-sm text-gray-700">
-                      Password
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        type="password"
-                        placeholder="Create a password"
-                        {...field}
-                        className="rounded-xl h-12 px-4 text-sm border-gray-300 focus:ring-2 focus:ring-purple-300"
-                      />
-                    </FormControl>
-                    <FormMessage className="text-red-500 text-xs mt-1" />
-                  </FormItem>
-                )}
-              />
-
-              <Button
-                type="submit"
-                disabled={isPending}
-                className={`w-full h-12 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-semibold transition ${
-                  isPending ? "opacity-60 cursor-not-allowed" : ""
-                }`}
-              >
-                {isPending ? "Creating account..." : "Register"}
-              </Button>
-            </form>
-          </Form>
-        </div>
+            <Button
+              type="submit"
+              disabled={isPending}
+              className={`w-full h-12 rounded-md bg-orange-500 hover:bg-orange-600 text-white font-semibold transition ${
+                isPending ? "opacity-60 cursor-not-allowed" : ""
+              }`}
+            >
+              {isPending ? "Creating account..." : "Register"}
+            </Button>
+          </form>
+        </Form>
       </div>
     </div>
   );

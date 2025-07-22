@@ -4,28 +4,34 @@ import Cookies from "js-cookie";
 import { CookieName } from "@/app/types/cookie-emun";
 
 interface AuthStore {
-  accessToken: string;
-  refreshToken: string;
+  accessToken: string | null;
+  refreshToken: string | null;
+  isAuthenticated: boolean; // getter boolean property
+
   setTokens: (accessToken: string, refreshToken: string) => void;
+  clearTokens: () => void;
 }
 
 export const useAuthStore = create<AuthStore>()(
-  devtools((set) => ({
-    accessToken: null,
-    refreshToken: null,
+  devtools((set, get) => ({
+    accessToken: Cookies.get(CookieName.ACCESS_TOKEN) || null,
+    refreshToken: Cookies.get(CookieName.REFRESH_TOKEN) || null,
 
-    //setToken after login or register
+    // getter property for auth state
+    get isAuthenticated() {
+      return !!get().accessToken;
+    },
+
     setTokens: (accessToken, refreshToken) => {
       Cookies.set(CookieName.ACCESS_TOKEN, accessToken);
       Cookies.set(CookieName.REFRESH_TOKEN, refreshToken);
-      set(
-        {
-          accessToken,
-          refreshToken,
-        },
-        false,
-        "token"
-      );
+      set({ accessToken, refreshToken });
+    },
+
+    clearTokens: () => {
+      Cookies.remove(CookieName.ACCESS_TOKEN);
+      Cookies.remove(CookieName.REFRESH_TOKEN);
+      set({ accessToken: null, refreshToken: null });
     },
   }))
 );

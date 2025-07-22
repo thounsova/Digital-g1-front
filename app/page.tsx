@@ -41,7 +41,7 @@ export default function ProfilePage() {
     if (!isLoading) {
       const timer = setTimeout(() => {
         setShowLoading(false);
-      }, 3000);
+      }, 1000);
       return () => clearTimeout(timer);
     } else {
       setShowLoading(true);
