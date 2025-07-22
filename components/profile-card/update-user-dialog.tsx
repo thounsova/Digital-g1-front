@@ -30,7 +30,7 @@ const formSchema = z.object({
   email: z.string().email("Invalid email"),
   user_name: z.string().min(1, "Username is required"),
   avatar: z.string().optional(),
-  cover_image: z.string().optional(), // ← Cover image field
+  cover_image: z.string().optional(),
 });
 
 export type FormValues = z.infer<typeof formSchema>;
@@ -76,7 +76,6 @@ export default function UpdateUserDialog({
     },
   });
 
-  // Reset form and previews on open/user change
   useEffect(() => {
     form.reset({
       full_name: user?.full_name || "",
@@ -90,7 +89,6 @@ export default function UpdateUserDialog({
     setAvatarPreview(user?.avatar || null);
     setCoverImageFile(null);
     setCoverImagePreview(user?.cover_image || null);
-
     form.setValue("avatar", user?.avatar || "");
     form.setValue("cover_image", user?.cover_image || "");
   }, [user, open, form]);
@@ -220,47 +218,47 @@ export default function UpdateUserDialog({
             onSubmit={form.handleSubmit(onSubmit)}
             className="space-y-4 pt-4"
           >
-            {/* Cover Image Upload */}
+            {/* Cover Image Upload (clickable area) */}
             <div className="w-full">
-              <div className="relative w-full h-32 rounded-md overflow-hidden bg-gray-200 mb-2">
+              <label
+                htmlFor="coverImageUpload"
+                className="relative w-full h-32 rounded-md overflow-hidden bg-gray-200 mb-2 block cursor-pointer"
+              >
                 {coverImagePreview ? (
-                  <img
-                    src={coverImagePreview}
-                    alt="Cover"
-                    className="object-cover w-full h-full"
-                  />
+                  <>
+                    <img
+                      src={coverImagePreview}
+                      alt="Cover"
+                      className="object-cover w-full h-full"
+                    />
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleRemoveCoverImage();
+                      }}
+                      className="absolute top-2 right-2 bg-white text-red-500 rounded-full w-6 h-6 flex items-center justify-center text-xs shadow border"
+                      aria-label="Remove cover"
+                    >
+                      ✕
+                    </button>
+                  </>
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-gray-500">
                     + Cover Image
                   </div>
                 )}
-                {coverImagePreview && (
-                  <button
-                    type="button"
-                    onClick={handleRemoveCoverImage}
-                    className="absolute top-2 right-2 bg-white text-red-500 rounded-full w-6 h-6 flex items-center justify-center text-xs shadow border"
-                    aria-label="Remove cover"
-                  >
-                    ✕
-                  </button>
-                )}
-              </div>
-              <Input
-                id="coverImageUpload"
-                type="file"
-                accept="image/*"
-                onChange={handleCoverImageChange}
-                className="hidden"
-              />
-              <Label
-                htmlFor="coverImageUpload"
-                className="text-sm font-medium cursor-pointer text-gray-600"
-              >
-                Click to change cover image
-              </Label>
+                <input
+                  id="coverImageUpload"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleCoverImageChange}
+                  className="hidden"
+                />
+              </label>
             </div>
 
-            {/* Hidden Cover Image Field */}
+            {/* Hidden Cover Field */}
             <FormField
               control={form.control}
               name="cover_image"
@@ -312,12 +310,6 @@ export default function UpdateUserDialog({
                 className="hidden"
                 onChange={handleFileChange}
               />
-              <Label
-                htmlFor="avatarUpload"
-                className="text-sm font-medium cursor-pointer text-gray-600"
-              >
-                Click to change avatar
-              </Label>
             </div>
 
             {/* Hidden Avatar Field */}
@@ -383,7 +375,7 @@ export default function UpdateUserDialog({
             <div className="flex justify-end gap-2 pt-4">
               <Button
                 type="submit"
-                className="w-full bg-pink-500 hover:bg-pink-400"
+                className="w-full bg-orange-500 hover:bg-orange-400"
                 disabled={isSubmitting || updateUserProfileMutation.isPending}
               >
                 {isSubmitting || updateUserProfileMutation.isPending

@@ -581,8 +581,8 @@ export default function UpdateCardForm({ params }: UpdateCardFormProps) {
                </div>
    
                {/* Submit */}
-   <div className="flex flex-col-12 sm:flex-row justify-center gap-4 pt-4">
-              <Button type="submit" className="w-full" disabled={updateCardMutation.isPending}>
+   <div className="flex flex-col-12 sm:flex-row rounded-xl justify-center gap-4 pt-4">
+              <Button type="submit" className="w-full rounded-xl" disabled={updateCardMutation.isPending}>
               {updateCardMutation.isPending ? "Updating..." : "Update Card"}
             </Button>
      

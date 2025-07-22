@@ -1,5 +1,7 @@
 "use client";
 
+import React from "react"; // <-- import React here
+
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -17,7 +19,9 @@ import { useMutation } from "@tanstack/react-query";
 import { authRequest } from "@/lib/api/auth-api";
 import { AuthLoginType } from "@/app/types/auth";
 import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/app/Store/authStore";
 import { useEffect } from "react";
+import { jwtDecode } from "jwt-decode"; // named import
 
 const LoginSchema = z.object({
   user_name: z.string().min(2, {
@@ -28,9 +32,14 @@ const LoginSchema = z.object({
   }),
 });
 
+interface JwtPayload {
+  roles: string[];
+}
+
 const Login = () => {
   const router = useRouter();
   const { AUTH_LOGIN } = authRequest();
+  const { isAuthenticated, setTokens, checkAuth } = useAuthStore();
 
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
@@ -39,14 +48,28 @@ const Login = () => {
       password: "",
     },
   });
-  useEffect(() => {});
+
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.replace("/");
+    }
+  }, [isAuthenticated, router]);
 
   const { mutate, isPending } = useMutation({
     mutationKey: ["login"],
     mutationFn: (payload: AuthLoginType) => AUTH_LOGIN(payload),
-    onSuccess: (data) => {
-      if (data) {
-        router.push("/");
+    onSuccess: (response) => {
+      const data = response.data; // Axios response data
+
+      if (data.accessToken && data.refreshToken) {
+        const decoded = jwtDecode<JwtPayload>(data.accessToken);
+        const roles = decoded.roles || [];
+        setTokens(data.accessToken, data.refreshToken, roles);
+        router.replace("/");
       }
     },
   });

@@ -3,7 +3,7 @@ import axios, { type AxiosRequestConfig } from "axios";
 import Cookies from "js-cookie";
 import { useAuthStore } from "@/app/Store/authStore";
 // import { Store } from '@reduxjs/toolkit';
-
+const Urlbase = process.env.NEXT_PUBLIC_API_BASE_URL;
 // export const injectStore = (_store: Store) => {};
 
 const axiosInstance = axios.create({

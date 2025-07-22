@@ -1,31 +1,62 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
-import Cookies from "js-cookie";
-import { CookieName } from "@/app/types/cookie-emun";
+import { clearTokens, saveTokens, getAccessToken, getRefreshToken } from "@/lib/cookie";
+import { jwtDecode } from "jwt-decode";
 
-interface AuthStore {
-  accessToken: string;
-  refreshToken: string;
-  setTokens: (accessToken: string, refreshToken: string) => void;
+interface JwtPayload {
+  roles: string[];
 }
 
-export const useAuthStore = create<AuthStore>()(
-  devtools((set) => ({
-    accessToken: null,
-    refreshToken: null,
+interface AuthState {
+  accessToken: string | null;
+  refreshToken: string | null;
+  isAuthenticated: boolean;
+  roles: string[];
+  setTokens: (accessToken: string, refreshToken: string, roles: string[]) => void;
+  checkAuth: () => void;
+  logout: () => void;
+}
 
-    //setToken after login or register
-    setTokens: (accessToken, refreshToken) => {
-      Cookies.set(CookieName.ACCESS_TOKEN, accessToken);
-      Cookies.set(CookieName.REFRESH_TOKEN, refreshToken);
-      set(
-        {
-          accessToken,
-          refreshToken,
-        },
-        false,
-        "token"
-      );
-    },
-  }))
+export const useAuthStore = create<AuthState>()(
+  devtools(
+    (set) => ({
+      accessToken: null,
+      refreshToken: null,
+      isAuthenticated: false,
+      roles: [],
+
+      setTokens: (accessToken, refreshToken, roles) => {
+        // Save tokens to cookies
+        saveTokens(accessToken, refreshToken);
+        // Update Zustand state
+        set({ accessToken, refreshToken, roles, isAuthenticated: true }, false, "auth/setTokens");
+      },
+
+      checkAuth: () => {
+        const access = getAccessToken();
+        const refresh = getRefreshToken();
+        const isAuth = !!access && !!refresh;
+
+        if (isAuth && access) {
+          try {
+            const decoded = jwtDecode<JwtPayload>(access);
+            const roles = decoded.roles || [];
+            set({ accessToken: access, refreshToken: refresh, isAuthenticated: true, roles }, false, "auth/checkAuth");
+          } catch (error) {
+            clearTokens();
+            set({ accessToken: null, refreshToken: null, isAuthenticated: false, roles: [] }, false, "auth/checkAuth/failed");
+          }
+        } else {
+          clearTokens();
+          set({ accessToken: null, refreshToken: null, isAuthenticated: false, roles: [] }, false, "auth/checkAuth/not-authenticated");
+        }
+      },
+
+      logout: () => {
+        clearTokens();
+        set({ accessToken: null, refreshToken: null, isAuthenticated: false, roles: [] }, false, "auth/logout");
+      },
+    }),
+    { name: "AuthStore" }
+  )
 );

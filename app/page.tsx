@@ -1,27 +1,30 @@
 "use client";
 
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { userRequest } from "@/lib/api/user-api";
-import { authRequest } from "@/lib/api/auth-api";
 import { useState, useEffect } from "react";
-import { User } from "lucide-react";
-
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
-import UpdateUserDialog from "@/components/profile-card/update-user-dialog";
-
-import { Plus, Pencil, LogOut } from "lucide-react";
-import Link from "next/link";
+import { useAuthStore } from "@/app/Store/authStore";
+import { userRequest } from "@/lib/api/user-api";
+import { authRequest } from "@/lib/api/auth-api";
 
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { CardItem } from "@/app/types/card-type";
+import UpdateUserDialog from "@/components/profile-card/update-user-dialog";
+
 import CorporateCard from "@/components/profile-card/corporate-card";
 import ModernCard from "@/components/profile-card/modern-card";
 import MinimalCard from "@/components/profile-card/minimal-card";
+
+import { Plus, Pencil, LogOut } from "lucide-react";
+import Link from "next/link";
+import { User } from "lucide-react";
+
+import { CardItem } from "@/app/types/card-type";
 import { IUser } from "@/app/types/user-typ";
 
 export default function ProfilePage() {
+  const { isAuthenticated, checkAuth, logout } = useAuthStore();
   const { PROFILE } = userRequest();
   const { AUTH_LOGOUT } = authRequest();
   const router = useRouter();
@@ -29,51 +32,65 @@ export default function ProfilePage() {
 
   const [openDialog, setOpenDialog] = useState(false);
   const [cards, setCards] = useState<CardItem[]>([]);
+  const [showLoading, setShowLoading] = useState(true);
 
+  // On mount, check auth
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
+
+  // Redirect to login if NOT authenticated
+  useEffect(() => {
+    if (!isAuthenticated) {
+      router.replace("/auth/Login");
+    }
+  }, [isAuthenticated, router]);
+
+  // Fetch user profile (only runs if authenticated)
   const { data: me, isLoading } = useQuery<IUser>({
     queryKey: ["me"],
     queryFn: PROFILE,
+    enabled: isAuthenticated, // only fetch if logged in
   });
 
-  const [showLoading, setShowLoading] = useState(true);
-
+  // Loading indicator for profile fetch
   useEffect(() => {
     if (!isLoading) {
-      const timer = setTimeout(() => {
-        setShowLoading(false);
-      }, 1000);
+      const timer = setTimeout(() => setShowLoading(false), 1000);
       return () => clearTimeout(timer);
     } else {
       setShowLoading(true);
     }
   }, [isLoading]);
 
+  // Set cards when user data loads
   useEffect(() => {
     if (me?.data?.idCard) {
       setCards(me.data.idCard);
     }
   }, [me]);
 
+  // Logout handler
   const handleLogout = async () => {
     try {
       await AUTH_LOGOUT();
     } catch (err) {
       console.error("Logout failed:", err);
     }
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+    logout(); // clears Zustand state and cookies
     router.push("/auth/Login");
   };
 
+  // Remove card locally + invalidate profile query
   const handleRemoveCard = (deletedCardId: string) => {
     setCards((prev) => prev.filter((card) => card.id !== deletedCardId));
     queryClient.invalidateQueries({ queryKey: ["me"] });
   };
 
-  if (showLoading)
+  if (showLoading) {
     return (
       <div className="flex justify-center mt-36 items-center py-20">
-        <div className="w-96 h-52 ">
+        <div className="w-96 h-52">
           <img
             src="https://mir-s3-cdn-cf.behance.net/project_modules/fs/21618192445957.5e4bc54becda4.gif"
             alt="Loading"
@@ -81,6 +98,7 @@ export default function ProfilePage() {
         </div>
       </div>
     );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-yellow-100 via-orange-100 to-yellow-200">
@@ -118,10 +136,12 @@ export default function ProfilePage() {
           <h2 className="mt-3 text-2xl font-semibold text-gray-900">
             {me?.data?.full_name}
           </h2>
+
           <div className="flex items-center justify-center gap-2 text-gray-600">
             <User className="w-4 h-4" />
             <span className="text-sm font-medium">@{me?.data?.user_name}</span>
           </div>
+
           <p className="text-sm text-gray-600">{me?.data?.email}</p>
 
           <div className="mt-6 flex flex-col-12 sm:flex-row justify-center gap-4 max-w-xs mx-auto">
