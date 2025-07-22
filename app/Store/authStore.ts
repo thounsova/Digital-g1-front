@@ -26,9 +26,7 @@ export const useAuthStore = create<AuthState>()(
       roles: [],
 
       setTokens: (accessToken, refreshToken, roles) => {
-        // Save tokens to cookies
         saveTokens(accessToken, refreshToken);
-        // Update Zustand state
         set({ accessToken, refreshToken, roles, isAuthenticated: true }, false, "auth/setTokens");
       },
 
@@ -42,12 +40,11 @@ export const useAuthStore = create<AuthState>()(
             const decoded = jwtDecode<JwtPayload>(access);
             const roles = decoded.roles || [];
             set({ accessToken: access, refreshToken: refresh, isAuthenticated: true, roles }, false, "auth/checkAuth");
-          } catch (error) {
-            clearTokens();
+          } catch {
             set({ accessToken: null, refreshToken: null, isAuthenticated: false, roles: [] }, false, "auth/checkAuth/failed");
+            clearTokens();
           }
         } else {
-          clearTokens();
           set({ accessToken: null, refreshToken: null, isAuthenticated: false, roles: [] }, false, "auth/checkAuth/not-authenticated");
         }
       },
