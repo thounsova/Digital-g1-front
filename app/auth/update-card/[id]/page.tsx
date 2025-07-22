@@ -576,7 +576,7 @@ export default function ProfileForm({
                 className="w-40 sm:w-40 border-orange-400 text-pink-600 hover:bg-pink-100 font-semibold py-3 rounded-xl shadow"
                 onClick={() => router.back()}
               >
-                back
+                Back
               </Button>
             </div>
           </form>
