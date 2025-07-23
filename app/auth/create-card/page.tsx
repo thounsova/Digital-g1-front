@@ -241,7 +241,7 @@ export default function CreateCardForm() {
                 name="nationality"
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
-                    <FormLabel className="text-sm font-semibold text-orange-700">
+                    <FormLabel className="text-sm sm:text-base font-semibold text-orange-700 mb-1">
                       Nationality
                     </FormLabel>
                     <FormControl>
@@ -260,15 +260,15 @@ export default function CreateCardForm() {
                 control={control}
                 name="dob"
                 render={({ field }) => (
-                  <FormItem className="flex flex-col">
-                    <FormLabel className="text-sm font-semibold text-orange-700">
+                  <FormItem className="flex flex-col w-full">
+                    <FormLabel className="text-sm sm:text-base font-semibold text-orange-700 mb-1">
                       Date of Birth
                     </FormLabel>
                     <FormControl>
                       <Input
                         type="date"
                         {...field}
-                        className="rounded-lg border border-orange-300 shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-orange-400"
+                        className="w-full rounded-lg border border-orange-300 shadow-sm p-3 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-orange-400"
                       />
                     </FormControl>
                     <FormMessage className="text-xs text-red-500 mt-1" />
