@@ -565,7 +565,7 @@ export default function ProfileForm({
             <div className="flex flex-col-12 sm:flex-row justify-center gap-4 pt-4">
               <Button
                 type="submit"
-                className="w-40 bg-orange-600 hover:bg-orange-700 focus:ring-4 focus:ring-orange-400 font-semibold transition"
+                className="w-40 bg-orange-600 hover:bg-orange-700 focus:ring-4 rounded-xl focus:ring-orange-400 font-semibold transition"
                 disabled={updateCardMutation.isPending}
               >
                 {updateCardMutation.isPending ? "Updating..." : "Update Card"}
@@ -573,7 +573,7 @@ export default function ProfileForm({
               <Button
                 type="button"
                 variant="outline"
-                className="w-40 sm:w-40 border-orange-400 text-pink-600 hover:bg-pink-100 font-semibold py-3 rounded-xl shadow"
+                className="w-40 sm:w-40 border-orange-400 text-orange-600 hover:bg-orange-200 font-semibold py-3 rounded-xl shadow"
                 onClick={() => router.back()}
               >
                 Back
