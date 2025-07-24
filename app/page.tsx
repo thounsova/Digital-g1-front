@@ -159,7 +159,7 @@ export default function ProfilePage() {
               <Link href="/create-card" passHref>
                 <Button className="bg-orange-500 hover:bg-orange-600 text-white flex items-center justify-center w-40 sm:w-auto px-6 py-2 rounded-lg shadow-md transition">
                   <Plus className="w-5 h-5 mr-2" />
-                  Create Card
+                  Create Cards
                 </Button>
               </Link>
 
