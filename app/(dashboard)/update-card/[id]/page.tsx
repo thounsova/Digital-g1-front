@@ -29,6 +29,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { cardRequest } from "@/lib/api/card-api";
 import { CreateCardType, SocialLink } from "@/app/types/card-type";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import BlockUser from "@/app/components/block-user";
 
 // Zod Schema
 const formSchema = z.object({
@@ -215,7 +216,6 @@ export default function ProfileForm({
       <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-xl p-8 space-y-6">
         <Form {...form}>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            {/* Card Type */}
             <div className="grid grid-cols-2 gap-6">
               <FormField
                 control={control}
@@ -273,7 +273,6 @@ export default function ProfileForm({
               />
             </div>
 
-            {/* Nationality, DOB, Address, Bio, Company, Job, Website, Phone */}
             <div className="grid grid-cols-2 gap-6">
               <FormField
                 control={control}

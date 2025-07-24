@@ -1,119 +1,59 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🌐 Digital ID Card Web View (Mobile Version)
 
-## Getting Started
+This is the **public-facing mobile web view** of the **Digital ID Card System**, developed using **Next.js**. It allows general users to create and share their own digital ID cards, replacing traditional paper-based business/contact cards.
 
-First, run the development server:
+> 🚀 Live Demo: [your-deployed-link.vercel.app](https://your-deployed-link.vercel.app)
+
+---
+
+## 📌 Project Overview
+
+In today’s eco-conscious and digital-first era, physical contact cards are outdated. This project aims to modernize business identification by offering a fully digital, shareable, and mobile-optimized ID card that general users can use to present their personal or professional info.
+
+This mobile web app displays the user’s contact card including:
+
+- Full Name
+- Job Title
+- Phone Number
+- Email
+- Company/Brand
+- Address
+- Profile Photo (optional)
+- Social or professional links
+- QR code or shareable URL
+
+---
+
+## 🛠️ Tech Stack
+
+| Technology          | Purpose                             |
+| ------------------- | ----------------------------------- |
+| **Next.js**         | Frontend Framework (React-based)    |
+| **Tailwind CSS**    | Utility-first styling               |
+| **Zustand**         | Lightweight global state management |
+| **TanStack Query**  | Fetch and cache backend API data    |
+| **Axios**           | Handle HTTP requests                |
+| **React Hook Form** | Form handling and validation        |
+| **QRCode.react**    | Generate shareable QR code          |
+
+---
+
+## 📲 Features
+
+- ✅ Responsive digital ID card display
+- ✅ QR code generation for sharing
+- ✅ Social/professional links
+- ✅ Real-time data fetch from backend
+- ✅ Clean and mobile-friendly UI
+- ✅ Auto-adaptive layout for small screens
+
+---
+
+## 🧑‍💻 How to Run the Project Locally
+
+### 1. Clone the Repository
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/thounsova/Digital-g1-front.git
+cd Digital-g1-front
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-
-## Main Features & Requirements
-
-This system is composed of three core components: Mobile View (User Interface), Admin Portal, and a Backend API service. Each component includes essential features required to support user registration, digital ID card management, QR code sharing, and administrative control.
-📱 Mobile View (User Interface)
-
-    Tech Stack: Next.js, React Hook Form, Zustand, TanStack Query, Axios
-
-## Features:
-
-    User Registration & Login (JWT Auth)
-
-    Mobile-optimized Digital ID Card View
-
-    Display user details: full name job title, company, phone, email, links
-
-    Share via generated QR Code or public URL
-
-    Real-time data sync with backend
-
-## Requirements:
-
-    Fully responsive design for mobile browsers
-
-    Server-side rendering for SEO optimization (optional)
-
-    Secure token-based session handling
-
-    User-friendly interface and form validation
-
-## Admin Portal (Dashboard)
-
-    Tech Stack: React.js, Zustand, Axios Interceptors, React Hook Form
-
-## Features:
-
-    Admin-only login with role-based access control
-
-    View and manage registered users
-
-    Create / Edit / Delete user accounts
-
-    Activate or deactivate digital ID cards
-
-    Dashboard view with total users and activity metrics
-
-## Requirements:
-
-    Protected routes using admin authentication
-
-    Clean UI/UX with filters, search, and table views
-
-    Action confirmation modals (e.g., delete or deactivate)
-
-    Analytics panel for high-level overview
-
-## Backend API Service
-
-    Tech Stack: Express.js (TypeScript), PostgreSQL, TypeORM, JWT
-
-## Features:
-
-    RESTful API for authentication & user management
-
-    JWT token generation and role-based route protection
-
-    CRUD operations for users and card data
-
-    QR code and public URL generation
-
-    Log actions and store admin operations
-
-## Requirements:
-
-    Secure JWT-based auth middleware
-
-    Database schema with users, roles, logs, settings
-
-    Input validation, error handling, and status codes
-
-    Environment-based configuration (.env)
-
-    PostgreSQL setup with TypeORM and migrations
